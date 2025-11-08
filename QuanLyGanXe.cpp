@@ -3,7 +3,7 @@
 QuanLyGanXe::QuanLyGanXe(const string& admin,
             unordered_map<string, TaiXe*>* taiXeByID,
             unordered_map<string, TaXi*>* taxiByID,
-            vector<TaXi>* dsTaxi)
+            MyVector<TaXi>* dsTaxi)
     : currentAdmin(admin), pTaiXeByID(taiXeByID), pTaxiByID(taxiByID), pDsTaxi(dsTaxi) {}
 
 QuanLyGanXe::~QuanLyGanXe() {}
@@ -65,7 +65,7 @@ void QuanLyGanXe::setTaxiByID(unordered_map<string, TaXi*>* taxiByID) {
     pTaxiByID = taxiByID;
 }
 
-void QuanLyGanXe::setDsTaxi(vector<TaXi>* dsTaxi) {
+void QuanLyGanXe::setDsTaxi(MyVector<TaXi>* dsTaxi) {
     pDsTaxi = dsTaxi;
 }
 

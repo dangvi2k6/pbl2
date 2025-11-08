@@ -1,7 +1,8 @@
+
 #ifndef QUANLYTAXI_H
 #define QUANLYTAXI_H
 
-#include <vector>
+#include "MyVector.h"
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -17,7 +18,7 @@ using namespace std;
 
 class QuanLyTaXi {
 private:
-    vector<TaXi> dsTaxi;
+    MyVector<TaXi> dsTaxi;
     unordered_map<string, TaXi*> taxiByID;
     string currentAdmin;
     unordered_map<string, TaiXe*>* pTaiXeByID; // Pointer để check tài xế tồn tại
@@ -43,7 +44,7 @@ public:
     void timTaxi();
     void xemChiTietTaxi();
     TaXi* timTaxiByID(const string&);
-    vector<TaXi>& getDSTaxi();
+    MyVector<TaXi>& getDSTaxi();
     unordered_map<string, TaXi*>& getTaxiByID();
 
 };

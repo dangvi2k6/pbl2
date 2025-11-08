@@ -421,7 +421,7 @@ void QuanLyChuyenXe::timChuyenXe() {
     cin >> choice;
     cin.ignore();
     
-    vector<ChuyenXe*> ketQua;
+    MyVector<ChuyenXe*> ketQua;
     
     switch(choice) {
         case 1: {
@@ -613,7 +613,7 @@ void QuanLyChuyenXe::hienThiChuyenXe() {
     Utils::pause();
 }
 
-vector<ChuyenXe>& QuanLyChuyenXe::getDSChuyenXe() {
+MyVector<ChuyenXe>& QuanLyChuyenXe::getDSChuyenXe() {
     return dsChuyenXe;
 }
 

@@ -1,7 +1,8 @@
+
 #ifndef QUANLYTAIXE_H
 #define QUANLYTAIXE_H
 
-#include <vector>
+#include "MyVector.h"
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -17,10 +18,10 @@ using namespace std;
 
 class QuanLyTaiXe {
 private:
-    vector<TaiXe> dsTaiXe;
+    MyVector<TaiXe> dsTaiXe;
     unordered_map<string, TaiXe*> taiXeByID;
     string currentAdmin;
-    vector<TaXi>* pDsTaxi; // Pointer đến danh sách taxi để cập nhật khi xóa tài xế
+    MyVector<TaXi>* pDsTaxi; // Pointer đến danh sách taxi để cập nhật khi xóa tài xế
 
     string sinhIDTaiXe();
     void rebuildTaiXeMap();
@@ -30,10 +31,10 @@ private:
     
 public:
 
-    QuanLyTaiXe(const string&, vector<TaXi>* = nullptr);
+    QuanLyTaiXe(const string&, MyVector<TaXi>* = nullptr);
     ~QuanLyTaiXe();
     void setCurrentAdmin(const string&);
-    void setDSTaxi(vector<TaXi>*);
+    void setDSTaxi(MyVector<TaXi>*);
     void docTaiXe();
     void ghiTaiXe();
     void themTaiXe();
@@ -43,7 +44,7 @@ public:
     void timTaiXe();
     void suaTaiXeByPointer(TaiXe*);
     TaiXe* timTaiXeByID(const string&);
-    vector<TaiXe>& getDSTaiXe();
+    MyVector<TaiXe>& getDSTaiXe();
     unordered_map<string, TaiXe*>& getTaiXeByID();
 
 };

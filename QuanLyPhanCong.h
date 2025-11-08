@@ -1,7 +1,7 @@
 #ifndef QUANLYPHANCONG_H
 #define QUANLYPHANCONG_H
 
-#include <vector>
+#include "MyVector.h"
 #include <unordered_map>
 #include <fstream>
 #include <sstream>
@@ -17,7 +17,7 @@ using namespace std;
 
 class QuanLyPhanCong {
 private:
-    vector<PhanCong> dsPhanCong;
+    MyVector<PhanCong> dsPhanCong;
     unordered_map<string, PhanCong*> phanCongByID;
     string currentAdmin;
     unordered_map<string, TaiXe*>* pTaiXeByID;
@@ -43,7 +43,7 @@ public:
     void hienThiPhanCong();
     void timPhanCong();
 
-    vector<PhanCong>& getDSPhanCong();
+    MyVector<PhanCong>& getDSPhanCong();
     
 };
 

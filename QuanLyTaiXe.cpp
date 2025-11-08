@@ -1,6 +1,6 @@
 #include "QuanLyTaiXe.h"
 
-QuanLyTaiXe::QuanLyTaiXe(const string& admin, vector<TaXi>* dsTaxi) 
+QuanLyTaiXe::QuanLyTaiXe(const string& admin, MyVector<TaXi>* dsTaxi) 
     : currentAdmin(admin), pDsTaxi(dsTaxi) {
     docTaiXe();
 }
@@ -76,7 +76,7 @@ void QuanLyTaiXe::setCurrentAdmin(const string& admin) {
     currentAdmin = admin;
 }
 
-void QuanLyTaiXe::setDSTaxi(vector<TaXi>* dsTaxi) {
+void QuanLyTaiXe::setDSTaxi(MyVector<TaXi>* dsTaxi) {
     pDsTaxi = dsTaxi;
 }
 
@@ -491,7 +491,7 @@ void QuanLyTaiXe::timTaiXe() {
     cin >> choice; 
     cin.ignore();
     
-    vector<TaiXe*> ketQua;
+    MyVector<TaiXe*> ketQua;
     
     switch(choice) {
         case 1: { 
@@ -775,7 +775,7 @@ TaiXe* QuanLyTaiXe::timTaiXeByID(const string& id) {
     return nullptr;
 }
 
-vector<TaiXe>& QuanLyTaiXe::getDSTaiXe() {
+MyVector<TaiXe>& QuanLyTaiXe::getDSTaiXe() {
     return dsTaiXe;
 }
 

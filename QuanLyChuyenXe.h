@@ -1,7 +1,7 @@
 #ifndef QUANLYCHUYENXE_H
 #define QUANLYCHUYENXE_H
 
-#include <vector>
+#include "MyVector.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -17,7 +17,7 @@ using namespace std;
 
 class QuanLyChuyenXe {
 private:
-    vector<ChuyenXe> dsChuyenXe;
+    MyVector<ChuyenXe> dsChuyenXe;
     string currentAdmin;
     unordered_map<string, TaiXe*>* pTaiXeByID;
     unordered_map<string, TaXi*>* pTaxiByID;
@@ -46,7 +46,7 @@ public:
     void timChuyenXe();
     void hienThiChuyenXe();
 
-    vector<ChuyenXe>& getDSChuyenXe();
+    MyVector<ChuyenXe>& getDSChuyenXe();
 };
 
 #endif

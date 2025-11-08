@@ -308,7 +308,7 @@ void QuanLyPhanCong::timPhanCong() {
     cin >> choice; 
     cin.ignore();
     
-    vector<PhanCong*> ketQua;
+    MyVector<PhanCong*> ketQua;
     
     switch(choice) {
         case 1: { 
@@ -382,6 +382,6 @@ void QuanLyPhanCong::timPhanCong() {
     Utils::pause();
 }
 
-vector<PhanCong>& QuanLyPhanCong::getDSPhanCong() {
+MyVector<PhanCong>& QuanLyPhanCong::getDSPhanCong() {
     return dsPhanCong;
 }
