@@ -1,6 +1,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#define WIN32_LEAN_AND_MEAN
+#define NOMIMAX
+
 #include <windows.h>
 #include <iostream>
 #include <string>
@@ -44,8 +47,8 @@ public:
     static string nhapMatKhauAn() {
         string password = "";
         char ch;
-        while ((ch = _getch()) != 13) { // Enter = 13
-            if (ch == 8 && !password.empty()) { // Backspace = 8
+        while ((ch = _getch()) != 13) { 
+            if (ch == 8 && !password.empty()) { 
                 password.pop_back();
                 cout << "\b \b";
             }
@@ -80,17 +83,17 @@ public:
             int ch = _getch();
             if(ch == 224 || ch == 0) {
                 int code = _getch();
-                if(code == 72) { // Up
+                if(code == 72) { 
                     selected = (selected - 1 + (int)items.size()) % (int)items.size();
                 }
-                else if(code == 80) { // Down
+                else if(code == 80) {
                     selected = (selected + 1) % (int)items.size();
                 }
             }
-            else if(ch == 13) { // Enter
+            else if(ch == 13) { 
                 return selected;
             }
-            else if(ch == 27) { // ESC
+            else if(ch == 27) { 
                 return -1;
             }
             else if(ch >= '1' && ch <= '9') {

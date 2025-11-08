@@ -1,6 +1,6 @@
 #include "QuanLyTaiXe.h"
 
-QuanLyTaiXe::QuanLyTaiXe(const string& admin, vector<TaXi>* dsTaxi = nullptr) 
+QuanLyTaiXe::QuanLyTaiXe(const string& admin, vector<TaXi>* dsTaxi) 
     : currentAdmin(admin), pDsTaxi(dsTaxi) {
     docTaiXe();
 }

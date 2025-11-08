@@ -30,7 +30,7 @@ private:
     
 public:
 
-    QuanLyTaiXe(const string&, vector<TaXi>*);
+    QuanLyTaiXe(const string&, vector<TaXi>* = nullptr);
     ~QuanLyTaiXe();
     void setCurrentAdmin(const string&);
     void setDSTaxi(vector<TaXi>*);

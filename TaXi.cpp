@@ -9,7 +9,7 @@ TaXi::TaXi(const string& id = "", const string& bs = "", const string& mau = "",
 
 TaXi::~TaXi() {}
 
-bool TaXi::exists(const string& idXe, const string& filename = "cars.txt") {
+bool TaXi::exists(const string& idXe, const string& filename) {
     ifstream fin(filename);
     if (!fin.is_open()) return false;
     string line;
