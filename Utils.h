@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-#include <vector>
+#include "MyVector.h"
 #include <conio.h>
 
 using namespace std;
@@ -61,7 +61,7 @@ public:
         return password;
     }
 
-    static int showMenu(const string& title, const vector<string>& items, 
+    static int showMenu(const string& title, const MyVector<string>& items, 
                        const string& hint = "Mui ten Len/Xuong de di chuyen, Enter de chon, ESC de quay lai. So 1-9 de chon nhanh.") {
         int selected = 0;
         while(true) {

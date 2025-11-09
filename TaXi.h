@@ -2,7 +2,7 @@
 #define TAXI_H
 
 #include <string>
-#include <vector>
+#include "MyVector.h"
 #include <fstream>
 #include <sstream>
 
@@ -19,7 +19,7 @@ public:
     string ngayBaoDuongGanNhat;
     int sucChua;
     bool trangThaiXe;
-    vector<string> dsTaiXe;
+    MyVector<string> dsTaiXe;
 
 public:
     TaXi(const string&, const string&, const string&, 

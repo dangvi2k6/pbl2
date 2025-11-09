@@ -516,7 +516,7 @@ void QuanLyTaXi::timTaxi() {
     cin >> choice; 
     cin.ignore();
     
-    vector<TaXi*> ketQua;
+    MyVector<TaXi*> ketQua;
     
     switch(choice) {
         case 1: { 
@@ -706,7 +706,7 @@ TaXi* QuanLyTaXi::timTaxiByID(const string& id) {
     return nullptr;
 }
 
-vector<TaXi>& QuanLyTaXi::getDSTaxi() {
+MyVector<TaXi>& QuanLyTaXi::getDSTaxi() {
     return dsTaxi;
 }
 

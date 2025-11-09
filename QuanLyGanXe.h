@@ -1,7 +1,7 @@
 #ifndef QUANLYGANXE_H
 #define QUANLYGANXE_H
 
-#include <vector>
+#include "MyVector.h"
 #include <unordered_map>
 #include <fstream>
 #include <iostream>
@@ -18,7 +18,7 @@ private:
     string currentAdmin;
     unordered_map<string, TaiXe*>* pTaiXeByID;
     unordered_map<string, TaXi*>* pTaxiByID;
-    vector<TaXi>* pDsTaxi;
+    MyVector<TaXi>* pDsTaxi;
 
     string taoMaGhiNhan();
     void ghiLog(const string&, const string&);
@@ -33,12 +33,12 @@ public:
     QuanLyGanXe(const string&,
                 unordered_map<string, TaiXe*>* = nullptr,
                 unordered_map<string, TaXi*>* = nullptr,
-                vector<TaXi>* = nullptr);
+                MyVector<TaXi>* = nullptr);
     ~QuanLyGanXe();
     void setCurrentAdmin(const string&);
     void setTaiXeByID(unordered_map<string, TaiXe*>*);
     void setTaxiByID(unordered_map<string, TaXi*>*);
-    void setDsTaxi(vector<TaXi>*);
+    void setDsTaxi(MyVector<TaXi>*);
     void ganTaiXeChoXe();
     void huyGanTaiXeChoXe();
     void xemLog();
