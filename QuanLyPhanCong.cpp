@@ -86,7 +86,7 @@ void QuanLyPhanCong::themPhanCong() {
     
     string idtx, idxe, st, et, note;
     
-    cout << "Nhap ID tai xe: "; 
+    cout << "Nhap ID tai xe (VD: TX001, TX012,...): "; 
     cin >> idtx; 
     cin.ignore();
     
@@ -98,7 +98,7 @@ void QuanLyPhanCong::themPhanCong() {
         return;
     }
     
-    cout << "Nhap ID xe: "; 
+    cout << "Nhap ID xe (VD: XE001, XE012,...): "; 
     getline(cin, idxe);
     
     if (pTaxiByID && pTaxiByID->find(idxe) == pTaxiByID->end()) {
@@ -131,7 +131,7 @@ void QuanLyPhanCong::suaPhanCong() {
     Utils::printHeader("SUA THONG TIN PHAN CONG");
     
     string id;
-    cout << "Nhap ID phan cong can sua: "; 
+    cout << "Nhap ID phan cong can sua (VD: PC0001, PC0002,...): "; 
     cin >> id; 
     cin.ignore();
     
@@ -224,7 +224,7 @@ void QuanLyPhanCong::xoaPhanCong() {
     Utils::printHeader("XOA PHAN CONG");
     
     string id; 
-    cout << "Nhap ID phan cong can xoa: "; 
+    cout << "Nhap ID phan cong can xoa (VD: PC0001, PC0002,...): "; 
     cin >> id;
     
     auto it = phanCongByID.find(id);
@@ -313,7 +313,7 @@ void QuanLyPhanCong::timPhanCong() {
     switch(choice) {
         case 1: { 
             string id; 
-            cout << "Nhap ID phan cong can tim: "; 
+            cout << "Nhap ID phan cong can tim (VD: PC0001, PC0002,...): "; 
             getline(cin, id); 
             for (auto& pc : dsPhanCong) 
                 if (pc.IDPC.find(id) != string::npos) 
@@ -322,7 +322,7 @@ void QuanLyPhanCong::timPhanCong() {
         }
         case 2: { 
             string idtx; 
-            cout << "Nhap ID tai xe can tim: "; 
+            cout << "Nhap ID tai xe can tim (VD: TX001, TX012,...): "; 
             getline(cin, idtx); 
             for (auto& pc : dsPhanCong) 
                 if (pc.IDTX.find(idtx) != string::npos) 
@@ -331,7 +331,7 @@ void QuanLyPhanCong::timPhanCong() {
         }
         case 3: { 
             string idxe; 
-            cout << "Nhap ID xe can tim: "; 
+            cout << "Nhap ID xe can tim (VD: XE001, XE012,...): "; 
             getline(cin, idxe); 
             for (auto& pc : dsPhanCong) 
                 if (pc.IDXe.find(idxe) != string::npos) 

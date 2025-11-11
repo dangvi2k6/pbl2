@@ -189,7 +189,7 @@ void QuanLyTaiXe::suaTaiXe() {
     Utils::printHeader("SUA THONG TIN TAI XE");
     
     string id;
-    cout << "Nhap ID tai xe can sua: ";
+    cout << "Nhap ID tai xe can sua (VD: TX001, TX012,...): ";
     cin >> id;
     
     auto itMap = taiXeByID.find(id);
@@ -369,7 +369,7 @@ void QuanLyTaiXe::xoaTaiXe() {
     Utils::printHeader("XOA TAI XE");
     
     string id;
-    cout << "Nhap ID tai xe can xoa: ";
+    cout << "Nhap ID tai xe can xoa (VD: TX001, TX012,...): ";
     cin >> id;
     
     auto itMap = taiXeByID.find(id);
@@ -496,7 +496,7 @@ void QuanLyTaiXe::timTaiXe() {
     switch(choice) {
         case 1: { 
             string id; 
-            cout << "Nhap ID can tim: "; 
+            cout << "Nhap ID can tim (VD: TX001, TX012,...): "; 
             getline(cin, id); 
             for (auto& tx : dsTaiXe) 
                 if (tx.IDTX.find(id) != string::npos) 

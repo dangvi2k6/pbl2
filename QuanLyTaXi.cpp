@@ -230,7 +230,7 @@ void QuanLyTaXi::suaTaxi() {
     Utils::printHeader("SUA THONG TIN TAXI");
     
     string id;
-    cout << "Nhap ID xe can sua: ";
+    cout << "Nhap ID xe can sua (VD: XE001, XE012,...): ";
     cin >> id;
     
     auto itMap = taxiByID.find(id);
@@ -392,7 +392,7 @@ void QuanLyTaXi::xoaTaxi() {
     Utils::printHeader("XOA TAXI");
     
     string id;
-    cout << "Nhap ID xe can xoa: ";
+    cout << "Nhap ID xe can xoa (VD: XE001, XE012,...): ";
     cin >> id;
     
     auto itMap = taxiByID.find(id);
@@ -521,7 +521,7 @@ void QuanLyTaXi::timTaxi() {
     switch(choice) {
         case 1: { 
             string id; 
-            cout << "Nhap ID can tim: "; 
+            cout << "Nhap ID can tim (VD: XE001, XE012,...): "; 
             getline(cin, id); 
             for (auto& tx : dsTaxi) 
                 if (tx.IDXe.find(id) != string::npos) 
@@ -654,7 +654,7 @@ void QuanLyTaXi::xemChiTietTaxi() {
     system("cls");
     Utils::printHeader("XEM CHI TIET TAXI");
     string id; 
-    cout << "Nhap ID xe can xem: "; 
+    cout << "Nhap ID xe can xem (VD: XE001, XE012,...): "; 
     cin >> id;
     auto itMap = taxiByID.find(id);
     if (itMap == taxiByID.end()) { 

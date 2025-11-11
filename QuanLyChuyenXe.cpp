@@ -239,7 +239,7 @@ void QuanLyChuyenXe::suaChuyenXe() {
     Utils::printHeader("SUA CHUYEN XE");
     
     string id;
-    cout << "Nhap ID chuyen xe can sua: ";
+    cout << "Nhap ID chuyen xe can sua (VD: TX001, TX012,...): ";
     cin >> id;
     cin.ignore();
     
@@ -351,7 +351,7 @@ void QuanLyChuyenXe::xoaChuyenXe() {
     Utils::printHeader("XOA CHUYEN XE");
     
     string id;
-    cout << "Nhap ID chuyen xe can xoa: ";
+    cout << "Nhap ID chuyen xe can xoa (VD: CX001, CX012,...): ";
     cin >> id;
     
     auto it = find_if(dsChuyenXe.begin(), dsChuyenXe.end(), 
@@ -426,7 +426,7 @@ void QuanLyChuyenXe::timChuyenXe() {
     switch(choice) {
         case 1: {
             string id;
-            cout << "Nhap ma chuyen can tim: ";
+            cout << "Nhap ma chuyen can tim (VD: CX001, CX012,...): ";
             getline(cin, id);
             for (auto& cx : dsChuyenXe) {
                 if (cx.IDChuyen.find(id) != string::npos) {
@@ -437,7 +437,7 @@ void QuanLyChuyenXe::timChuyenXe() {
         }
         case 2: {
             string idTX;
-            cout << "Nhap ID tai xe can tim: ";
+            cout << "Nhap ID tai xe can tim (VD: TX001, TX012,...): ";
             getline(cin, idTX);
             for (auto& cx : dsChuyenXe) {
                 if (cx.IDTX.find(idTX) != string::npos) {
@@ -448,7 +448,7 @@ void QuanLyChuyenXe::timChuyenXe() {
         }
         case 3: {
             string idXe;
-            cout << "Nhap ID xe can tim: ";
+            cout << "Nhap ID xe can tim (VD: XE001, XE012,...): ";
             getline(cin, idXe);
             for (auto& cx : dsChuyenXe) {
                 if (cx.IDXe.find(idXe) != string::npos) {
