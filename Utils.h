@@ -69,24 +69,95 @@ public:
         return password;
     }
 
+    static int calculateMenuWidth(const string& title, const MyVector<string>& items, const string& hint)
+    {
+        int maxLen=title.length() + 16;
+
+        for(int i=0; i<items.size(); i++){
+            int itemLen=items[i].length() + 3;
+            if (itemLen > maxLen) maxLen = itemLen;
+        }
+
+        int hintLen = hint.length() + 12; // +12 cho "Huong dan: "
+        if(hintLen > maxLen) maxLen=hintLen;
+
+        return maxLen;
+    }
+
+    static void drawMenuBox(int left, int top, int width, int height)
+    {
+        int right=left+width-1;
+        int bottom=top+height-1;
+
+        setColor(12);
+
+        gotoxy(left, top);
+        cout<<"╔";
+
+        gotoxy(right, top);
+        cout << "╗";
+        
+        gotoxy(left, bottom);
+        cout << "╚";
+
+        gotoxy(right, bottom);
+        cout << "╝";
+
+        for (int x = left + 1; x < right; x++) {
+            gotoxy(x, top);
+            cout << "═";
+            gotoxy(x, bottom);
+            cout << "═";
+        }
+
+        for (int y = top + 1; y < bottom; y++) {
+            gotoxy(left, y);
+            cout << "║";
+            gotoxy(right, y);
+            cout << "║";
+        }
+
+        setColor(7);
+    }
+
     static int showMenu(const string& title, const MyVector<string>& items, 
                        const string& hint = "Mui ten Len/Xuong de di chuyen, Enter de chon, ESC de quay lai. So 1-9 de chon nhanh.") {
         int selected = 0;
         while(true) {
             system("cls");
-            printHeader(title);
+            int width = calculateMenuWidth(title, items, hint)+4;
+            int height=items.size()+6;
+            int left=5;
+            int top=2;
 
-            for(int i = 0; i < (int)items.size(); ++i) {
-                if(i == selected) {
+            drawMenuBox(left, top, width, height);
+
+            int titleY=top+1;
+            int titleX=left+(width-(title.length()+8))/2;
+            setColor(14);
+            gotoxy(titleX, titleY);
+            cout<<"***"<<title<<"***";
+
+            int menuStartY=top+2;
+            for(int i=0;i<(int)items.size(); i++){
+                gotoxy(left+2, menuStartY+i);
+                if(i==selected){
                     setColor(11);
-                    cout << ">> " << items[i] << "\n";
-                    setColor(7);
+                    cout<<">>"<<items[i]; 
                 }
-                else {
-                    cout << "   " << items[i] << "\n";
+                else{
+                    setColor(7);
+                    cout<<" "<<items[i];
                 }
             }
-            cout << "\nHuong dan: " << hint << "\n";
+
+            int separatorY=menuStartY+items.size();
+
+            setColor(10);
+            gotoxy(left+2, separatorY);
+            cout<<"Huong dan: "<<hint;
+
+            setColor(7);
 
             int ch = _getch();
             if(ch == 224 || ch == 0) {

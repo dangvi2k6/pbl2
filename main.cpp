@@ -19,7 +19,7 @@ void drawBox(int left, int top, int width, int height) {
 	cout<<"╔";
 
 	Utils::gotoxy(right, top);
-	cout<<"╗";
+	cout<<"╗"; 
 
 	Utils::gotoxy(left, bottom);
 	cout<<"╚";
