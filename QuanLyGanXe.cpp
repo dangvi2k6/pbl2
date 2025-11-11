@@ -74,7 +74,7 @@ void QuanLyGanXe::ganTaiXeChoXe() {
     Utils::printHeader("GAN TAI XE CHO XE (THIET LAP QUYEN)");
 
     string idXe, idTX;
-    cout << "Nhap ID xe: ";
+    cout << "Nhap ID xe (VD: XE001, XE012,...): ";
     cin >> idXe;
     cin.ignore();
 
@@ -118,7 +118,7 @@ void QuanLyGanXe::ganTaiXeChoXe() {
         }
     }
 
-    cout << "\nNhap ID tai xe muon gan: ";
+    cout << "\nNhap ID tai xe muon gan (VD: TX001, TX012,...): ";
     getline(cin, idTX);
 
     if (!pTaiXeByID) {
@@ -194,7 +194,7 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
     Utils::printHeader("HUY GAN TAI XE CHO XE");
 
     string idXe;
-    cout << "Nhap ID xe: ";
+    cout << "Nhap ID xe (VD: XE001, XE012,...): ";
     cin >> idXe;
     cin.ignore();
 
