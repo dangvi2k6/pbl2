@@ -22,6 +22,7 @@ void setcolor(int color) {
 }
 
 static void pause() {
+    gotoxy(22,17);
     cout << "\nNhan phim bat ky de tiep tuc...";
     _getch();
 }
@@ -29,32 +30,62 @@ static void pause() {
 void info() {
 	setcolor(14);
 	gotoxy(40, 4);
-	printf("***PBL2: Dự án cơ sở lập trình***");
+	cout<<"***PBL2: Dự án cơ sở lập trình***";
 
-	gotoxy(15, 6);
-	printf("Đề tài: Xây dựng xây dựng ứng dụng quản lý hệ thống taxi");
+	gotoxy(28, 6);
+	cout<<"Đề tài: Xây dựng xây dựng ứng dụng quản lý hệ thống taxi";
 
 	gotoxy(17, 9);
-	printf("-Sinh viên thực hiện:");
+	cout<<"-Sinh viên thực hiện:";
 
 	gotoxy(77, 9);
-	printf("-Giảng viên hướng dẫn:");
+	cout<<"-Giảng viên hướng dẫn:";
 
 	gotoxy(19, 10);
-	printf("Nguyễn Hoa Việt Xô");
+	cout<<"Nguyễn Hoa Việt Xô";
 
 	gotoxy(19, 11);
-	printf("Đặng Lâm Chí Vĩ");
+	cout<<"Đặng Lâm Chí Vĩ";
 
 	gotoxy(17, 12);
-	printf("-Lớp SH: 24T_KHDL");
+	cout<<"-Lớp SH: 24T_KHDL";
 
 	gotoxy(79, 10);
-	printf("ThS. Trần Hồ Thủy Tiên");
+	cout<<"ThS. Trần Hồ Thủy Tiên";
 
 }
 
+void drawBox(int left, int top, int width, int height) {
+	int right = left + width + 1;
+	int bottom = top + height + 1;
 
+	setcolor(4);
+
+	gotoxy(left, top);
+	cout<<"╔";
+
+	gotoxy(right, top);
+	cout<<"╗";
+
+	gotoxy(left, bottom);
+	cout<<"╚";
+
+	gotoxy(right, bottom);
+	cout<<"╝";
+
+	for (int x = left + 1; x < right; x++) {
+		gotoxy(x, top);
+		cout<<"═";
+		gotoxy(x, bottom);
+		cout<<"═";
+	}
+	for (int y = top + 1; y < bottom; y++) {
+		gotoxy(left, y);
+		cout<<"║";
+		gotoxy(right, y);
+		cout<<"║";
+	}
+}
 // Forward declaration
 void menuChinhSauDangNhap(QuanLyAdmin& qlAdmin, QuanLyTaiXe& qlTaiXe, QuanLyTaXi& qlTaxi,
                           QuanLyChuyenXe& qlChuyenXe, QuanLyPhanCong& qlPhanCong, QuanLyGanXe& qlGanXe);
@@ -348,11 +379,15 @@ void menuChinhSauDangNhap(QuanLyAdmin& qlAdmin, QuanLyTaiXe& qlTaiXe, QuanLyTaXi
 }
 
 int main() {
+    SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
     // Khởi tạo QuanLyAdmin
     QuanLyAdmin qlAdmin;
 
-    info();
 
+    system("cls");
+    drawBox(8,2,100,13);
+    info();
     pause();
 
     // Menu đăng nhập/đăng ký

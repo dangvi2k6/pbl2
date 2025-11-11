@@ -19,12 +19,26 @@ public:
     string Note;
 
 public:
-    PhanCong(const string&, const string&, const string&, 
-             const string&, const string&, const string&);
+    PhanCong(const string& idpc = "", const string& idtx = "", const string& idxe = "", 
+             const string& st = "", const string& et = "", const string& note = "")
+        : IDPC(idpc), IDTX(idtx), IDXe(idxe), StartTime(st), EndTime(et), Note(note) {}
 
-    ~PhanCong();
+    ~PhanCong() {}
 
-    void saveToFile(const string&) const;
+    void saveToFile(const string& filename = "phancong.txt") const {
+        if (!TaiXe::exists(IDTX))
+            throw runtime_error("Loi: Tai xe " + IDTX + " khong ton tai!");
+        if (!TaXi::exists(IDXe))
+            throw runtime_error("Loi: Xe " + IDXe + " khong ton tai!");
+
+        ofstream fout(filename, ios::app);
+        if (!fout.is_open())
+            throw runtime_error("Khong mo duoc file phancong.txt de ghi!");
+
+        fout << IDPC << "|" << IDTX << "|" << IDXe << "|" << StartTime << "|"
+            << EndTime << "|" << Note << "\n";
+        fout.close();
+    }
 };
 
 #endif
