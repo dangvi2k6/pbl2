@@ -6,8 +6,54 @@
 #include "QuanLyChuyenXe.h"
 #include "QuanLyPhanCong.h"
 #include "QuanLyGanXe.h"
-
+ 
 using namespace std;
+
+void gotoxy(int x, int y)
+{
+    COORD c;
+    c.X = x;
+    c.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
+
+void setcolor(int color) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
+}
+
+static void pause() {
+    cout << "\nNhan phim bat ky de tiep tuc...";
+    _getch();
+}
+
+void info() {
+	setcolor(14);
+	gotoxy(40, 4);
+	printf("***PBL2: Dự án cơ sở lập trình***");
+
+	gotoxy(15, 6);
+	printf("Đề tài: Xây dựng xây dựng ứng dụng quản lý hệ thống taxi");
+
+	gotoxy(17, 9);
+	printf("-Sinh viên thực hiện:");
+
+	gotoxy(77, 9);
+	printf("-Giảng viên hướng dẫn:");
+
+	gotoxy(19, 10);
+	printf("Nguyễn Hoa Việt Xô");
+
+	gotoxy(19, 11);
+	printf("Đặng Lâm Chí Vĩ");
+
+	gotoxy(17, 12);
+	printf("-Lớp SH: 24T_KHDL");
+
+	gotoxy(79, 10);
+	printf("ThS. Trần Hồ Thủy Tiên");
+
+}
+
 
 // Forward declaration
 void menuChinhSauDangNhap(QuanLyAdmin& qlAdmin, QuanLyTaiXe& qlTaiXe, QuanLyTaXi& qlTaxi,
@@ -304,6 +350,10 @@ void menuChinhSauDangNhap(QuanLyAdmin& qlAdmin, QuanLyTaiXe& qlTaiXe, QuanLyTaXi
 int main() {
     // Khởi tạo QuanLyAdmin
     QuanLyAdmin qlAdmin;
+
+    info();
+
+    pause();
 
     // Menu đăng nhập/đăng ký
     while (true) {
