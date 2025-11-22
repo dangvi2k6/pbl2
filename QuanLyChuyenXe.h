@@ -26,6 +26,7 @@ private:
     void ghiLichSuChuyenXe(const string&, const ChuyenXe&, const string& = "");
     void ghiLichSuHoatDong(const string&, const string&,
                             const string&, const string& = "THANH_CONG");
+    double tinhCuocPhi(double khoangCach, double thoiGian, const string& thoiDiem);
 
     
 
