@@ -7,6 +7,83 @@ QuanLyChuyenXe::QuanLyChuyenXe(const string& admin,
 }
 QuanLyChuyenXe::~QuanLyChuyenXe() {}
 
+/**
+ * Tinh cuoc phi taxi tu dong dua tren khoang cach, thoi gian va thoi diem
+ * 
+ * Cong thuc:
+ * - Cuoc phi co ban: 10,000 VND cho 2km dau
+ * - Tu km thu 2 den km thu 30: 12,000 VND/km
+ * - Tu km thu 30 tro di: 10,000 VND/km
+ * - Phu phi gio cao diem (6h-9h va 16h-20h): them 20%
+ * - Phu phi dem (22h-5h): them 30%
+ * - Phu phi thoi gian cho: neu thoi gian > khoang cach/40 thi tinh them 5,000 VND/10 phut cho
+ * 
+ * @param khoangCach Khoang cach di chuyen (km)
+ * @param thoiGian Thoi gian di chuyen (gio)
+ * @param thoiDiem Thoi diem khoi hanh (format: dd/mm/yyyy HH:MM)
+ * @return Cuoc phi tinh toan (VND)
+ */
+double QuanLyChuyenXe::tinhCuocPhi(double khoangCach, double thoiGian, const string& thoiDiem) {
+    // Xu ly truong hop dac biet
+    if (khoangCach < 0) khoangCach = 0;
+    if (thoiGian < 0) thoiGian = 0;
+    
+    double cuocPhiCoBan = 0;
+    
+    // Tinh cuoc phi theo khoang cach
+    if (khoangCach <= 2) {
+        // 2km dau: 10,000 VND
+        cuocPhiCoBan = 10000;
+    } else if (khoangCach <= 30) {
+        // Tu km thu 2 den km thu 30: 10,000 (2km dau) + 12,000 * (khoang cach - 2)
+        cuocPhiCoBan = 10000 + (khoangCach - 2) * 12000;
+    } else {
+        // Tu km thu 30 tro di: 10,000 (2km dau) + 12,000 * 28 + 10,000 * (khoang cach - 30)
+        cuocPhiCoBan = 10000 + 28 * 12000 + (khoangCach - 30) * 10000;
+    }
+    
+    // Phu phi thoi gian cho
+    double phuPhiCho = 0;
+    if (khoangCach > 0) {
+        double thoiGianDuKien = khoangCach / 40.0; // Van toc trung binh 40km/h
+        if (thoiGian > thoiGianDuKien) {
+            double thoiGianCho = (thoiGian - thoiGianDuKien) * 60; // Chuyen sang phut
+            phuPhiCho = (thoiGianCho / 10.0) * 5000; // 5,000 VND/10 phut
+        }
+    }
+    
+    double tongCuocPhi = cuocPhiCoBan + phuPhiCho;
+    
+    // Phu phi theo thoi diem
+    // Trich xuat gio tu thoiDiem (format: dd/mm/yyyy HH:MM)
+    int gio = -1;
+    size_t spacePos = thoiDiem.find(' ');
+    if (spacePos != string::npos && spacePos + 1 < thoiDiem.length()) {
+        string timePart = thoiDiem.substr(spacePos + 1);
+        size_t colonPos = timePart.find(':');
+        if (colonPos != string::npos) {
+            try {
+                gio = stoi(timePart.substr(0, colonPos));
+            } catch(...) {
+                gio = -1;
+            }
+        }
+    }
+    
+    // Ap dung phu phi neu co thong tin gio hop le
+    if (gio >= 0 && gio < 24) {
+        if ((gio >= 6 && gio < 9) || (gio >= 16 && gio < 20)) {
+            // Gio cao diem: them 20%
+            tongCuocPhi *= 1.20;
+        } else if (gio >= 22 || gio < 5) {
+            // Gio dem: them 30%
+            tongCuocPhi *= 1.30;
+        }
+    }
+    
+    return tongCuocPhi;
+}
+
 string QuanLyChuyenXe::sinhIDChuyenXe() {
     int maxID = 0;
     for (const auto& cx : dsChuyenXe) {
@@ -202,7 +279,96 @@ void QuanLyChuyenXe::themChuyenXe() {
         cout << "Nhap thoi diem (dd/mm/yyyy HH:MM): "; getline(cin, thoiDiem);
         cout << "Nhap khoang cach (km): "; cin >> khoangCach;
         cout << "Nhap thoi gian (gio): "; cin >> thoiGian;
-        cout << "Nhap cuoc phi (VND): "; cin >> cuocPhi;
+        
+        // Tinh cuoc phi tu dong
+        double cuocPhiTuDong = tinhCuocPhi(khoangCach, thoiGian, thoiDiem);
+        
+        cout << "\n=== CUOC PHI TU DONG ===\n";
+        
+        // Hien thi chi tiet cac thanh phan cuoc phi
+        double cuocPhiCoBan = 0;
+        if (khoangCach <= 2) {
+            cuocPhiCoBan = 10000;
+            cout << "Cuoc phi co ban (2km dau): " << fixed << setprecision(0) << cuocPhiCoBan << " VND\n";
+        } else if (khoangCach <= 30) {
+            cuocPhiCoBan = 10000 + (khoangCach - 2) * 12000;
+            cout << "Cuoc phi co ban:\n";
+            cout << "  - 2km dau: 10,000 VND\n";
+            cout << "  - " << fixed << setprecision(2) << (khoangCach - 2) 
+                 << " km tiep theo x 12,000 VND/km: " 
+                 << fixed << setprecision(0) << (khoangCach - 2) * 12000 << " VND\n";
+            cout << "  Tong co ban: " << fixed << setprecision(0) << cuocPhiCoBan << " VND\n";
+        } else {
+            cuocPhiCoBan = 10000 + 28 * 12000 + (khoangCach - 30) * 10000;
+            cout << "Cuoc phi co ban:\n";
+            cout << "  - 2km dau: 10,000 VND\n";
+            cout << "  - 28km tiep theo x 12,000 VND/km: 336,000 VND\n";
+            cout << "  - " << fixed << setprecision(2) << (khoangCach - 30) 
+                 << " km con lai x 10,000 VND/km: " 
+                 << fixed << setprecision(0) << (khoangCach - 30) * 10000 << " VND\n";
+            cout << "  Tong co ban: " << fixed << setprecision(0) << cuocPhiCoBan << " VND\n";
+        }
+        
+        // Phu phi thoi gian cho
+        double phuPhiCho = 0;
+        if (khoangCach > 0) {
+            double thoiGianDuKien = khoangCach / 40.0;
+            if (thoiGian > thoiGianDuKien) {
+                double thoiGianCho = (thoiGian - thoiGianDuKien) * 60;
+                phuPhiCho = (thoiGianCho / 10.0) * 5000;
+                cout << "Phu phi thoi gian cho (" << fixed << setprecision(1) 
+                     << thoiGianCho << " phut): " 
+                     << fixed << setprecision(0) << phuPhiCho << " VND\n";
+            }
+        }
+        
+        // Phu phi theo gio
+        int gio = -1;
+        size_t spacePos = thoiDiem.find(' ');
+        if (spacePos != string::npos && spacePos + 1 < thoiDiem.length()) {
+            string timePart = thoiDiem.substr(spacePos + 1);
+            size_t colonPos = timePart.find(':');
+            if (colonPos != string::npos) {
+                try {
+                    gio = stoi(timePart.substr(0, colonPos));
+                } catch(...) {
+                    gio = -1;
+                }
+            }
+        }
+        
+        double phuPhiTheoGio = 0;
+        string loaiPhuPhi = "";
+        if (gio >= 0 && gio < 24) {
+            if ((gio >= 6 && gio < 9) || (gio >= 16 && gio < 20)) {
+                phuPhiTheoGio = (cuocPhiCoBan + phuPhiCho) * 0.20;
+                loaiPhuPhi = "gio cao diem";
+                cout << "Phu phi " << loaiPhuPhi << " (20%): " 
+                     << fixed << setprecision(0) << phuPhiTheoGio << " VND\n";
+            } else if (gio >= 22 || gio < 5) {
+                phuPhiTheoGio = (cuocPhiCoBan + phuPhiCho) * 0.30;
+                loaiPhuPhi = "gio dem";
+                cout << "Phu phi " << loaiPhuPhi << " (30%): " 
+                     << fixed << setprecision(0) << phuPhiTheoGio << " VND\n";
+            }
+        }
+        
+        cout << "------------------------\n";
+        cout << "TONG CUOC PHI DE XUAT: " << fixed << setprecision(0) << cuocPhiTuDong << " VND\n";
+        cout << "========================\n\n";
+        
+        // Hoi nguoi dung co muon su dung cuoc phi tu dong khong
+        cout << "Ban co muon su dung cuoc phi tu dong? (Y/N): ";
+        char luaChon;
+        cin >> luaChon;
+        
+        if (luaChon == 'Y' || luaChon == 'y') {
+            cuocPhi = cuocPhiTuDong;
+            cout << "Da chon cuoc phi tu dong: " << fixed << setprecision(0) << cuocPhi << " VND\n";
+        } else {
+            cout << "Nhap cuoc phi thu cong (VND): ";
+            cin >> cuocPhi;
+        }
         cin.ignore();
         
         ChuyenXe cxMoi(idChuyen, idTaiXe, idXe, tenKhach, sdtKhach, thoiDiem, khoangCach, thoiGian, cuocPhi);
