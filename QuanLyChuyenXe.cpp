@@ -117,24 +117,108 @@ void QuanLyChuyenXe::ghiChuyenXe() {
     file.close();
 }
 
+double QuanLyChuyenXe::tinhCuocPhi(double khoangCach, double thoiGian, const string& thoiDiem) {
+    if (khoangCach <= 0) return 0;
+    
+    double cuocPhi = 0;
+    
+    //B1: Tính cước phí cơ bản
+    // 2km dau tien: 10,000 VND
+    if (khoangCach <= 2) {
+        cuocPhi = 10000;
+    }
+    // Tu 2-30km: 10,000 + (khoangCach - 2) * 12,000
+    else if (khoangCach <= 30) {
+        cuocPhi = 10000 + (khoangCach - 2) * 12000;
+    }
+    // Tren 30km: 10,000 + 28*12,000 + (khoangCach - 30) * 10,000
+    else {
+        cuocPhi = 10000 + 28 * 12000 + (khoangCach - 30) * 10000;
+    }
+    
+    // B2: Tính phụ phí giờ cao điểm và đêm
+    // =========================================
+    // Lay gio tu thoiDiem (format: dd/mm/yyyy HH:MM)
+    int gio = 0;
+    size_t pos = thoiDiem.find(' ');
+    if (pos != string::npos && pos + 3 <= thoiDiem.length()) {
+        try {
+            string gioStr = thoiDiem.substr(pos + 1, 2);
+            gio = stoi(gioStr);
+        } catch(...) {
+            gio = 12; // Mac dinh gio binh thuong
+        }
+    }
+    
+    double phuPhiGio = 0;
+    
+    // Gio cao diem sang: 6h-9h (+20%)
+    if (gio >= 6 && gio < 9) {
+        phuPhiGio = cuocPhi * 0.20;
+        cout << "\n[+] Phu phi gio cao diem sang (6h-9h): +" 
+             << fixed << setprecision(0) << phuPhiGio << " VND (+20%)\n";
+    }
+    // Gio cao diem chieu: 16h-20h (+20%)
+    else if (gio >= 16 && gio < 20) {
+        phuPhiGio = cuocPhi * 0.20;
+        cout << "\n[+] Phu phi gio cao diem chieu (16h-20h): +" 
+             << fixed << setprecision(0) << phuPhiGio << " VND (+20%)\n";
+    }
+    // Gio dem: 22h-5h (+30%)
+    else if (gio >= 22 || gio < 5) {
+        phuPhiGio = cuocPhi * 0.30;
+        cout << "\n[+] Phu phi gio dem (22h-5h): +" 
+             << fixed << setprecision(0) << phuPhiGio << " VND (+30%)\n";
+    }
+    
+    cuocPhi += phuPhiGio;
+    
+    // BUOC 3: TINH PHU PHI THOI GIAN CHO
+    // ===================================
+    // Neu van toc trung binh < 40km/h thi tinh phu phi cho
+    double vanTocTrungBinh = (thoiGian > 0) ? (khoangCach / thoiGian) : 40;
+    
+    if (vanTocTrungBinh < 40 && thoiGian > 0) {
+        // Thoi gian cho = thoi gian thuc te - thoi gian ly thuyet
+        double thoiGianLyThuyet = khoangCach / 40.0; // gio
+        double thoiGianCho = thoiGian - thoiGianLyThuyet;
+        
+        if (thoiGianCho > 0) {
+            // Tinh phu phi: 5,000 VND / 10 phut = 30,000 VND / gio
+            double phuPhiCho = (thoiGianCho * 60) / 10 * 5000;
+            cuocPhi += phuPhiCho;
+            
+            cout << "[+] Phu phi thoi gian cho (" 
+                 << fixed << setprecision(1) << (thoiGianCho * 60) 
+                 << " phut): +" << fixed << setprecision(0) 
+                 << phuPhiCho << " VND\n";
+        }
+    }
+    
+    return cuocPhi;
+}
+
 void QuanLyChuyenXe::themChuyenXe() {
     while (true) {
         system("cls");
         Utils::printHeader("THEM CHUYEN XE");
 
         string idChuyen = sinhIDChuyenXe();
+        cout << "ID phan cong (tu dong): " << idChuyen << endl;
         
         string idTaiXe, idXe, tenKhach, sdtKhach, thoiDiem;
         double khoangCach, thoiGian, cuocPhi;
         
-        string m;
-        cout << "Nhap '0' de quay lai: ";
-        cin >> m;
+        // string m;
+        // cout << "Nhap '0' de quay lai: ";
+        // cin >> m;
+        // cin.ignore();
+        
+        // if (m == "0") return;
+        
+        cout << "Nhap ID tai xe (VD: TX001, TX012,...): "; 
+        cin >> idTaiXe; 
         cin.ignore();
-        
-        if (m == "0") return;
-        
-        cout << "Nhap ID tai xe: "; getline(cin, idTaiXe);
         
         // Kiểm tra tài xế tồn tại
         if (pTaiXeByID) {
@@ -202,9 +286,14 @@ void QuanLyChuyenXe::themChuyenXe() {
         cout << "Nhap thoi diem (dd/mm/yyyy HH:MM): "; getline(cin, thoiDiem);
         cout << "Nhap khoang cach (km): "; cin >> khoangCach;
         cout << "Nhap thoi gian (gio): "; cin >> thoiGian;
-        cout << "Nhap cuoc phi (VND): "; cin >> cuocPhi;
         cin.ignore();
         
+        double cuocPhiTuDong = tinhCuocPhi(khoangCach, thoiGian, thoiDiem);
+        cuocPhi = cuocPhiTuDong;
+        Utils::setColor(10);
+        cout << "Cuoc phi: " << fixed << setprecision(0) << cuocPhi << " VND\n";
+        Utils::setColor(7);
+
         ChuyenXe cxMoi(idChuyen, idTaiXe, idXe, tenKhach, sdtKhach, thoiDiem, khoangCach, thoiGian, cuocPhi);
         dsChuyenXe.push_back(cxMoi);
         

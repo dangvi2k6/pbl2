@@ -6,7 +6,7 @@
 #include "QuanLyChuyenXe.h"
 #include "QuanLyPhanCong.h"
 #include "QuanLyGanXe.h"
- 
+
 using namespace std;
 
 void drawBox(int left, int top, int width, int height) {
@@ -303,7 +303,7 @@ void menuLogLichSu(QuanLyGanXe& qlGanXe) {
 void menuChinhSauDangNhap(QuanLyAdmin& qlAdmin, QuanLyTaiXe& qlTaiXe, QuanLyTaXi& qlTaxi,
                           QuanLyChuyenXe& qlChuyenXe, QuanLyPhanCong& qlPhanCong, QuanLyGanXe& qlGanXe) {
     while (true) {
-        int mainChoice = Utils::showMenu("MENU CHINH - QUAN LY TAXI", {
+        int mainChoice = Utils::showMenu("MENU 1CHINH - QUAN LY TAXI", {
             "1. Quan ly Admin",
             "2. Quan ly Tai Xe",
             "3. Quan ly Taxi",
