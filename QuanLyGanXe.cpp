@@ -72,11 +72,11 @@ void QuanLyGanXe::setDsTaxi(MyVector<TaXi>* dsTaxi) {
 void QuanLyGanXe::ganTaiXeChoXe() {
     system("cls");
     Utils::printHeader("GAN TAI XE CHO XE (THIET LAP QUYEN)");
-
+    cout<<"(ESC de quay lai)"<<endl;
     string idXe, idTX;
-    cout << "Nhap ID xe (VD: XE001, XE012,...): ";
-    cin >> idXe;
-    cin.ignore();
+    if(! Utils::getInputWithESC(idXe, "Nhap ID xe can gan tai xe (VD: XE001, XE012,...): ")) {
+        return;
+    }
 
     if (!pTaxiByID) {
         Utils::setColor(12);
@@ -118,8 +118,9 @@ void QuanLyGanXe::ganTaiXeChoXe() {
         }
     }
 
-    cout << "\nNhap ID tai xe muon gan (VD: TX001, TX012,...): ";
-    getline(cin, idTX);
+    if(! Utils::getInputWithESC(idTX, "\nNhap ID tai xe can gan cho xe (VD: TX001, TX012): ")) {
+        return;
+    }
 
     if (!pTaiXeByID) {
         Utils::setColor(12);
@@ -192,11 +193,12 @@ void QuanLyGanXe::ganTaiXeChoXe() {
 void QuanLyGanXe::huyGanTaiXeChoXe() {
     system("cls");
     Utils::printHeader("HUY GAN TAI XE CHO XE");
-
+    cout<<"(ESC de quay lai)"<<endl;
+    
     string idXe;
-    cout << "Nhap ID xe (VD: XE001, XE012,...): ";
-    cin >> idXe;
-    cin.ignore();
+    if(! Utils::getInputWithESC(idXe, "Nhap ID xe can huy gan tai xe (VD: XE001, XE012,...): ")) {
+        return;
+    }
 
     if (!pTaxiByID) {
         Utils::setColor(12);
@@ -236,10 +238,12 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
         }
     }
     
-    cout << "Nhap STT tai xe muon huy gan: ";
-    int stt; 
-    cin >> stt; 
-    cin.ignore();
+    int stt;
+    string sttStr; 
+    if(! Utils::getInputWithESC(sttStr, "Nhap STT tai xe muon huy gan: ")) {
+        return;
+    }
+    stt= stoi(sttStr);
     
     if (stt < 1 || stt > (int)xe->dsTaiXe.size()) {
         Utils::setColor(12); 

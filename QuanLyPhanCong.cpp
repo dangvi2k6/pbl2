@@ -80,15 +80,16 @@ void QuanLyPhanCong::ghiPhanCong() {
 void QuanLyPhanCong::themPhanCong() {
     system("cls");
     Utils::printHeader("THEM PHAN CONG");
-    
+    cout<<"(ESC de quay lai)"<<endl;
+
     string idpc = sinhIDPhanCong();
     cout << "ID phan cong (tu dong): " << idpc << endl;
     
     string idtx, idxe, st, et, note;
     
-    cout << "Nhap ID tai xe (VD: TX001, TX012,...): "; 
-    cin >> idtx; 
-    cin.ignore();
+    if (!Utils::getInputWithESC(idtx, "Nhap ID tai xe (VD: TX001, TX012,...): ")) {
+        return;
+    }
     
     if (pTaiXeByID && pTaiXeByID->find(idtx) == pTaiXeByID->end()) {
         Utils::setColor(12); 
@@ -98,8 +99,9 @@ void QuanLyPhanCong::themPhanCong() {
         return;
     }
     
-    cout << "Nhap ID xe (VD: XE001, XE012,...): "; 
-    getline(cin, idxe);
+    if (!Utils::getInputWithESC(idxe, "Nhap ID xe (VD: XE001, XE012,...): ")) {
+        return;
+    }
     
     if (pTaxiByID && pTaxiByID->find(idxe) == pTaxiByID->end()) {
         Utils::setColor(12); 
@@ -109,12 +111,17 @@ void QuanLyPhanCong::themPhanCong() {
         return;
     }
     
-    cout << "Nhap thoi gian bat dau (dd/mm/yyyy HH:MM): "; 
-    getline(cin, st);
-    cout << "Nhap thoi gian ket thuc (dd/mm/yyyy HH:MM): "; 
-    getline(cin, et);
-    cout << "Nhap ghi chu: "; 
-    getline(cin, note);
+    if (! Utils::getInputWithESC(st, "Nhap thoi gian bat dau (dd/mm/yyyy HH:MM): ")) {
+        return;
+    }
+    
+    if (!Utils::getInputWithESC(et, "Nhap thoi gian ket thuc (dd/mm/yyyy HH:MM): ")) {
+        return;
+    }
+    
+    if (!Utils::getInputWithESC(note, "Nhap ghi chu: ")) {
+        return;
+    }
     
     dsPhanCong.emplace_back(idpc, idtx, idxe, st, et, note);
     phanCongByID[idpc] = &dsPhanCong.back();
@@ -129,11 +136,13 @@ void QuanLyPhanCong::themPhanCong() {
 void QuanLyPhanCong::suaPhanCong() {
     system("cls");
     Utils::printHeader("SUA THONG TIN PHAN CONG");
-    
+    cout<<"(ESC de quay lai)"<<endl;
+
     string id;
     cout << "Nhap ID phan cong can sua (VD: PC0001, PC0002,...): "; 
-    cin >> id; 
-    cin.ignore();
+    if (!Utils::getInputWithESC(id, "Nhap ID phan cong can sua (VD: PC0001, PC0002,...): ")) {
+        return;
+    }
     
     auto it = phanCongByID.find(id);
     if (it == phanCongByID.end()) {
@@ -147,9 +156,10 @@ void QuanLyPhanCong::suaPhanCong() {
     PhanCong* pc = it->second;
     
     cout << "ID hien tai: " << pc->IDPC << "\n";
-    cout << "Nhap ID moi (Enter de giu nguyen): ";
     string newID; 
-    getline(cin, newID);
+    if (! Utils::getInputWithESC(newID, "Nhap ID moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!newID.empty() && newID != pc->IDPC) {
         if (phanCongByID.count(newID)) { 
             Utils::setColor(12); 
@@ -164,9 +174,10 @@ void QuanLyPhanCong::suaPhanCong() {
     }
     
     cout << "ID tai xe hien tai: " << pc->IDTX << "\n";
-    cout << "Nhap ID tai xe moi (Enter de giu nguyen): ";
     string idtx; 
-    getline(cin, idtx);
+    if (!Utils::getInputWithESC(idtx, "Nhap ID tai xe moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!idtx.empty()) {
         if (pTaiXeByID && pTaiXeByID->find(idtx) == pTaiXeByID->end()) { 
             Utils::setColor(12); 
@@ -179,9 +190,10 @@ void QuanLyPhanCong::suaPhanCong() {
     }
     
     cout << "ID xe hien tai: " << pc->IDXe << "\n";
-    cout << "Nhap ID xe moi (Enter de giu nguyen): ";
     string idxe; 
-    getline(cin, idxe);
+    if (!Utils::getInputWithESC(idxe, "Nhap ID xe moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!idxe.empty()) {
         if (pTaxiByID && pTaxiByID->find(idxe) == pTaxiByID->end()) { 
             Utils::setColor(12); 
@@ -194,21 +206,24 @@ void QuanLyPhanCong::suaPhanCong() {
     }
     
     cout << "Thoi gian bat dau hien tai: " << pc->StartTime << "\n";
-    cout << "Nhap thoi gian bat dau moi (Enter de giu nguyen): ";
     string st; 
-    getline(cin, st); 
+    if (!Utils::getInputWithESC(st, "Nhap thoi gian bat dau moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!st.empty()) pc->StartTime = st;
     
     cout << "Thoi gian ket thuc hien tai: " << pc->EndTime << "\n";
-    cout << "Nhap thoi gian ket thuc moi (Enter de giu nguyen): ";
     string et; 
-    getline(cin, et); 
+    if (!Utils::getInputWithESC(et, "Nhap thoi gian ket thuc moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!et.empty()) pc->EndTime = et;
     
     cout << "Ghi chu hien tai: " << pc->Note << "\n";
-    cout << "Nhap ghi chu moi (Enter de giu nguyen): ";
     string note; 
-    getline(cin, note); 
+    if (! Utils::getInputWithESC(note, "Nhap ghi chu moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!note.empty()) pc->Note = note;
     
     ghiPhanCong();
@@ -222,10 +237,12 @@ void QuanLyPhanCong::suaPhanCong() {
 void QuanLyPhanCong::xoaPhanCong() {
     system("cls");
     Utils::printHeader("XOA PHAN CONG");
-    
+    cout<<"(ESC de quay lai)"<<endl;
+
     string id; 
-    cout << "Nhap ID phan cong can xoa (VD: PC0001, PC0002,...): "; 
-    cin >> id;
+    if (! Utils::getInputWithESC(id, "Nhap ID phan cong can xoa (VD: PC0001, PC0002,...): ")) 
+        return;
+    cout<<endl;
     
     auto it = phanCongByID.find(id);
     if (it == phanCongByID.end()) { 

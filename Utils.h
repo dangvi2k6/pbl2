@@ -38,6 +38,36 @@ public:
         _getch();
     }
 
+    static bool getInputWithESC(string& input, const string& prompt = "") {
+        if (! prompt.empty()) {
+            cout << prompt;
+        }
+        
+        input = "";
+        char ch;
+        while (true) {
+            ch = _getch();
+            
+            if (ch == 27) {  // ESC pressed
+                return false;
+            }
+            
+            if (ch == '\r' || ch == '\n') {  // Enter pressed
+                cout << endl;
+                return true;
+            }
+            
+            if (ch == 8 && input.length() > 0) {  // Backspace
+                input. pop_back();
+                cout << "\b \b";
+            }
+            else if (ch >= 32 && ch <= 126) {  // Printable characters
+                input += ch;
+                cout << ch;
+            }
+        }
+    }
+
     static string layThoiGianHienTai() {
         time_t now = time(0);
         tm* ltm = localtime(&now);

@@ -202,6 +202,7 @@ void QuanLyChuyenXe::themChuyenXe() {
     while (true) {
         system("cls");
         Utils::printHeader("THEM CHUYEN XE");
+        cout<<"(ESC de quay lai)"<<endl;
 
         string idChuyen = sinhIDChuyenXe();
         cout << "ID phan cong (tu dong): " << idChuyen << endl;
@@ -209,17 +210,9 @@ void QuanLyChuyenXe::themChuyenXe() {
         string idTaiXe, idXe, tenKhach, sdtKhach, thoiDiem;
         double khoangCach, thoiGian, cuocPhi;
         
-        // string m;
-        // cout << "Nhap '0' de quay lai: ";
-        // cin >> m;
-        // cin.ignore();
-        
-        // if (m == "0") return;
-        
-        cout << "Nhap ID tai xe (VD: TX001, TX012,...): "; 
-        cin >> idTaiXe; 
-        cin.ignore();
-        
+        if(! Utils::getInputWithESC(idTaiXe, "Nhap ID tai xe (VD: TX001, TX012,...): ")) {
+            return;
+        }
         // Kiểm tra tài xế tồn tại
         if (pTaiXeByID) {
             auto itTaiXe = pTaiXeByID->find(idTaiXe);
@@ -249,7 +242,10 @@ void QuanLyChuyenXe::themChuyenXe() {
             }
         }
         
-        cout << "Nhap ID xe: "; getline(cin, idXe);
+        cout << "Nhap ID xe: "; 
+        if (! Utils::getInputWithESC(idXe, "Nhap ID xe (VD: XE001, XE012,...): ")) {
+            return;
+        }
         
         // Kiểm tra xe tồn tại
         if (pTaxiByID) {
@@ -281,12 +277,30 @@ void QuanLyChuyenXe::themChuyenXe() {
             }
         }
         
-        cout << "Nhap ten khach: "; getline(cin, tenKhach);
-        cout << "Nhap SDT khach: "; getline(cin, sdtKhach);
-        cout << "Nhap thoi diem (dd/mm/yyyy HH:MM): "; getline(cin, thoiDiem);
-        cout << "Nhap khoang cach (km): "; cin >> khoangCach;
-        cout << "Nhap thoi gian (gio): "; cin >> thoiGian;
-        cin.ignore();
+        cout << "Nhap ten khach: "; 
+        if (! Utils::getInputWithESC(tenKhach, "Nhap ten khach: ")) {
+            return;
+        }
+        cout << "Nhap SDT khach: "; 
+        if (! Utils::getInputWithESC(sdtKhach, "Nhap SDT khach: ")) {
+            return;
+        }
+        cout << "Nhap thoi diem (dd/mm/yyyy HH:MM): "; 
+        if (! Utils::getInputWithESC(thoiDiem, "Nhap thoi diem (dd/mm/yyyy HH:MM): ")) {
+            return;
+        }
+        
+        string khoangCachStr;
+        if (! Utils::getInputWithESC(khoangCachStr, "Nhap khoang cach (km): ")) {
+            return;
+        }
+        khoangCach = stod(khoangCachStr);
+
+        string thoiGianStr;
+        if (! Utils::getInputWithESC(thoiGianStr, "Nhap thoi gian (gio): ")) {
+            return;
+        }
+        thoiGian = stod(thoiGianStr);
         
         double cuocPhiTuDong = tinhCuocPhi(khoangCach, thoiGian, thoiDiem);
         cuocPhi = cuocPhiTuDong;
@@ -326,11 +340,12 @@ void QuanLyChuyenXe::themChuyenXe() {
 void QuanLyChuyenXe::suaChuyenXe() {
     system("cls");
     Utils::printHeader("SUA CHUYEN XE");
-    
+    cout<<"(ESC de quay lai)"<<endl;
+
     string id;
-    cout << "Nhap ID chuyen xe can sua (VD: TX001, TX012,...): ";
-    cin >> id;
-    cin.ignore();
+    if(! Utils::getInputWithESC(id, "Nhap ID chuyen xe can sua (VD: CX001, CX012,...): ")) {
+        return;
+    }
     
     bool found = false;
     for (auto &cx : dsChuyenXe) {
@@ -344,8 +359,10 @@ void QuanLyChuyenXe::suaChuyenXe() {
             
             // Tên khách
             cout << "Ten khach hien tai: " << cx.tenKhach << "\n";
-            cout << "Ten khach moi: ";
-            string ten; getline(cin, ten);
+            string ten;
+            if(! Utils::getInputWithESC(ten, "Ten khach moi: ")) {
+                return;
+            }
             if (!ten.empty() && ten != cx.tenKhach) {
                 thayDoiLog << "Ten khach: " << cx.tenKhach << " -> " << ten << "; ";
                 cx.tenKhach = ten;
@@ -353,8 +370,10 @@ void QuanLyChuyenXe::suaChuyenXe() {
             
             // SDT
             cout << "SDT hien tai: " << cx.sdtKhach << "\n";
-            cout << "So dien thoai moi: ";
-            string sdt; getline(cin, sdt);
+            string sdt;
+            if(! Utils::getInputWithESC(sdt, "SDT moi: ")) {
+                return;
+            }
             if (!sdt.empty() && sdt != cx.sdtKhach) {
                 thayDoiLog << "SDT: " << cx.sdtKhach << " -> " << sdt << "; ";
                 cx.sdtKhach = sdt;
@@ -362,8 +381,10 @@ void QuanLyChuyenXe::suaChuyenXe() {
             
             // Khoảng cách
             cout << "Khoang cach hien tai: " << cx.khoangCach << " km\n";
-            cout << "Khoang cach moi (km, Enter de giu nguyen): ";
-            string kc; getline(cin, kc);
+            string kc; 
+            if (! Utils::getInputWithESC(kc, "Khoang cach moi (km, Enter de giu nguyen): ")) {
+                return;
+            }
             if (!kc.empty()) {
                 try {
                     double newKc = stod(kc);
@@ -376,8 +397,10 @@ void QuanLyChuyenXe::suaChuyenXe() {
             
             // Thời gian
             cout << "Thoi gian hien tai: " << cx.thoiGian << " gio\n";
-            cout << "Thoi gian moi (gio, Enter de giu nguyen): ";
-            string tg; getline(cin, tg);
+            string tg;
+            if (! Utils::getInputWithESC(tg, "Thoi gian moi (gio, Enter de giu nguyen): ")) {
+                return;
+            }
             if (!tg.empty()) {
                 try {
                     double newTg = stod(tg);
@@ -390,8 +413,10 @@ void QuanLyChuyenXe::suaChuyenXe() {
             
             // Cước phí
             cout << "Cuoc phi hien tai: " << cx.cuocPhi << " VND\n";
-            cout << "Cuoc phi moi (Enter de giu nguyen): ";
-            string cp; getline(cin, cp);
+            string cp;
+            if (! Utils::getInputWithESC(cp, "Cuoc phi moi (VND, Enter de giu nguyen): ")) {
+                return;
+            }
             if (!cp.empty()) {
                 try {
                     double newCp = stod(cp);
@@ -438,10 +463,12 @@ void QuanLyChuyenXe::suaChuyenXe() {
 void QuanLyChuyenXe::xoaChuyenXe() {
     system("cls");
     Utils::printHeader("XOA CHUYEN XE");
+    cout<<"(ESC de quay lai)"<<endl;
     
     string id;
-    cout << "Nhap ID chuyen xe can xoa (VD: CX001, CX012,...): ";
-    cin >> id;
+    if(! Utils::getInputWithESC(id, "Nhap ID chuyen xe can xoa (VD: CX001, CX012,...): ")) {
+        return;
+    }
     
     auto it = find_if(dsChuyenXe.begin(), dsChuyenXe.end(), 
                         [&](const ChuyenXe &cx) { return cx.IDChuyen == id; });

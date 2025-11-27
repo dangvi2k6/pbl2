@@ -136,6 +136,7 @@ void QuanLyTaiXe::themTaiXe() {
     while (true) {
         system("cls");
         Utils::printHeader("THEM TAI XE");
+        cout<<"(ESC de quay lai)"<<endl;
         
         string id = sinhIDTaiXe();
         cout << "ID Tai xe (tu dong): " << id << endl;
@@ -143,25 +144,46 @@ void QuanLyTaiXe::themTaiXe() {
         string ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGN, note;
         int gioiTinhChoice, trangThaiChoice;
 
-        string m;
-        cout << "Nhap '0' de quay lai: ";
-        cin >> m;
-        cin.ignore();
-        
-        if (m == "0") return;
-        
-        cout << "Nhap ten tai xe: "; getline(cin, ten);
-        cout << "Nhap ngay sinh (dd/mm/yyyy): "; getline(cin, birth);
-        cout << "Nhap so CCCD: "; getline(cin, soCCCD);
-        cout << "Nhap dia chi: "; getline(cin, dc);
-        cout << "Nhap so dien thoai: "; getline(cin, sdt);
-        cout << "Nhap so GPLX: "; getline(cin, soGPLX);
-        cout << "Nhap hang GPLX (A1, A2, B1, B2, C, D, E, F): "; getline(cin, hangGPLX);
-        cout << "Nhap ngay gia nhap (dd/mm/yyyy): "; getline(cin, ngayGN);
-        cout << "Gioi tinh (1=Nam, 0=Nu): "; cin >> gioiTinhChoice;
-        cout << "Trang thai (1=Ranh, 0=Ban): "; cin >> trangThaiChoice;
-        cin.ignore();
-        
+        if(! Utils::getInputWithESC(ten, "Nhap ten tai xe: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(birth, "Nhap ngay sinh (dd/mm/yyyy): ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(soCCCD, "Nhap so CCCD: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(dc, "Nhap dia chi: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(sdt, "Nhap so dien thoai: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(soGPLX, "Nhap so GPLX: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(hangGPLX, "Nhap hang GPLX (A1, A2, B1, B2, C, D, E, F): ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(ngayGN, "Nhap ngay gia nhap (dd/mm/yyyy): ")) {
+            return;
+        }
+        string gioiTinhStr;
+        if(! Utils::getInputWithESC(gioiTinhStr, "Gioi tinh (1=Nam, 0=Nu): ")) {
+            return;
+        }
+        gioiTinhChoice = stoi(gioiTinhStr);
+
+        string trangThaiStr;
+        if(! Utils::getInputWithESC(trangThaiStr, "Trang thai (1=Ranh, 0=Ban): ")) {
+            return;
+        }
+        trangThaiChoice = stoi(trangThaiStr);
+
+        if(! Utils::getInputWithESC(note, "Nhap ghi chu: ")) {
+            return;
+        }
+
         bool gioiTinh = (gioiTinhChoice == 1);
         bool trangThai = (trangThaiChoice == 1);
         
@@ -187,10 +209,12 @@ void QuanLyTaiXe::themTaiXe() {
 void QuanLyTaiXe::suaTaiXe() {
     system("cls");
     Utils::printHeader("SUA THONG TIN TAI XE");
+    cout<<"(ESC de quay lai)"<<endl;
     
     string id;
-    cout << "Nhap ID tai xe can sua (VD: TX001, TX012,...): ";
-    cin >> id;
+    if(! Utils::getInputWithESC(id, "Nhap ID tai xe can sua (VD: TX001, TX012,...): ")) {
+        return;
+    }
     
     auto itMap = taiXeByID.find(id);
     if (itMap == taiXeByID.end()) {
@@ -213,8 +237,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // ID
     cout << "ID hien tai: " << tx->IDTX << "\n";
-    cout << "Nhap ID moi (Enter de giu nguyen): ";
-    string newID; getline(cin, newID);
+    string newID;
+    if(! Utils::getInputWithESC(newID, "Nhap ID moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!newID.empty() && newID != tx->IDTX) {
         if (taiXeByID.count(newID)) {
             Utils::setColor(12);
@@ -241,8 +267,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Tên
     cout << "Ten hien tai: " << tx->tenTaiXe << "\n";
-    cout << "Nhap ten moi (Enter de giu nguyen): ";
-    string ten; getline(cin, ten);
+    string ten; 
+    if(! Utils::getInputWithESC(ten, "Nhap ten moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!ten.empty() && ten != tx->tenTaiXe) {
         thayDoiLog << "Ten: " << tx->tenTaiXe << " -> " << ten << "; ";
         tx->tenTaiXe = ten;
@@ -250,8 +278,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Ngày sinh
     cout << "Ngay sinh hien tai: " << tx->birth << "\n";
-    cout << "Nhap ngay sinh moi (Enter de giu nguyen): ";
-    string birth; getline(cin, birth);
+    string birth;
+    if(! Utils::getInputWithESC(birth, "Nhap ngay sinh (dd/mm/yyyy) (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!birth.empty() && birth != tx->birth) {
         thayDoiLog << "Ngay sinh: " << tx->birth << " -> " << birth << "; ";
         tx->birth = birth;
@@ -259,8 +289,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // CCCD
     cout << "So CCCD hien tai: " << tx->soCCCD << "\n";
-    cout << "Nhap so CCCD moi (Enter de giu nguyen): ";
-    string cccd; getline(cin, cccd);
+    string cccd;
+    if(! Utils::getInputWithESC(cccd, "Nhap so CCCD moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!cccd.empty() && cccd != tx->soCCCD) {
         thayDoiLog << "CCCD: " << tx->soCCCD << " -> " << cccd << "; ";
         tx->soCCCD = cccd;
@@ -268,8 +300,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Địa chỉ
     cout << "Dia chi hien tai: " << tx->diaChi << "\n";
-    cout << "Nhap dia chi moi (Enter de giu nguyen): ";
-    string dc; getline(cin, dc);
+    string dc;
+    if(! Utils::getInputWithESC(dc, "Nhap dia chi moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!dc.empty() && dc != tx->diaChi) {
         thayDoiLog << "Dia chi: " << tx->diaChi << " -> " << dc << "; ";
         tx->diaChi = dc;
@@ -277,8 +311,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // SDT
     cout << "SDT hien tai: " << tx->sdt << "\n";
-    cout << "Nhap SDT moi (Enter de giu nguyen): ";
-    string sdt; getline(cin, sdt);
+    string sdt;
+    if(! Utils::getInputWithESC(sdt, "Nhap SDT moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!sdt.empty() && sdt != tx->sdt) {
         thayDoiLog << "SDT: " << tx->sdt << " -> " << sdt << "; ";
         tx->sdt = sdt;
@@ -286,8 +322,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // GPLX
     cout << "So GPLX hien tai: " << tx->soGPLX << "\n";
-    cout << "Nhap so GPLX moi (Enter de giu nguyen): ";
-    string gplx; getline(cin, gplx);
+    string gplx; 
+    if(! Utils::getInputWithESC(gplx, "Nhap so GPLX moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!gplx.empty() && gplx != tx->soGPLX) {
         thayDoiLog << "So GPLX: " << tx->soGPLX << " -> " << gplx << "; ";
         tx->soGPLX = gplx;
@@ -295,8 +333,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Hạng GPLX
     cout << "Hang GPLX hien tai: " << tx->hangGPLX << "\n";
-    cout << "Nhap hang GPLX moi (Enter de giu nguyen): ";
-    string hang; getline(cin, hang);
+    string hang;
+    if(! Utils::getInputWithESC(hang, "Nhap hang GPLX moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!hang.empty() && hang != tx->hangGPLX) {
         thayDoiLog << "Hang GPLX: " << tx->hangGPLX << " -> " << hang << "; ";
         tx->hangGPLX = hang;
@@ -304,8 +344,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Ngày gia nhập
     cout << "Ngay gia nhap hien tai: " << tx->ngayGiaNhap << "\n";
-    cout << "Nhap ngay gia nhap moi (Enter de giu nguyen): ";
-    string ngayGN; getline(cin, ngayGN);
+    string ngayGN;
+    if(! Utils::getInputWithESC(ngayGN, "Nhap ngay gia nhap moi (dd/mm/yyyy) (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!ngayGN.empty() && ngayGN != tx->ngayGiaNhap) {
         thayDoiLog << "Ngay gia nhap: " << tx->ngayGiaNhap << " -> " << ngayGN << "; ";
         tx->ngayGiaNhap = ngayGN;
@@ -313,8 +355,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Giới tính
     cout << "Gioi tinh hien tai: " << (tx->gioiTinh ? "Nam" : "Nu") << "\n";
-    cout << "Nhap gioi tinh (1=Nam, 0=Nu, Enter de giu nguyen): ";
-    string gt; getline(cin, gt);
+    string gt; 
+    if(! Utils::getInputWithESC(gt, "Nhap gioi tinh (1=Nam, 0=Nu, Enter de giu nguyen): ")) {
+        return;
+    }
     if (!gt.empty()) {
         bool newGt = (gt == "1");
         if (newGt != tx->gioiTinh) {
@@ -326,8 +370,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Trạng thái
     cout << "Trang thai hien tai: " << (tx->trangThaiTX ? "Ranh" : "Ban") << "\n";
-    cout << "Nhap trang thai (1=Ranh, 0=Ban, Enter de giu nguyen): ";
-    string st; getline(cin, st);
+    string st; 
+    if(! Utils::getInputWithESC(st, "Nhap trang thai (1=Ranh, 0=Ban, Enter de giu nguyen): ")) {
+        return;
+    }
     if (!st.empty()) {
         bool newSt = (st == "1");
         if (newSt != tx->trangThaiTX) {
@@ -339,8 +385,10 @@ void QuanLyTaiXe::suaTaiXe() {
     
     // Ghi chú
     cout << "Ghi chu hien tai: " << tx->note << "\n";
-    cout << "Nhap ghi chu moi (Enter de giu nguyen): ";
-    string note; getline(cin, note);
+    string note; 
+    if(! Utils::getInputWithESC(note, "Nhap ghi chu moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!note.empty() && note != tx->note) {
         thayDoiLog << "Ghi chu: " << tx->note << " -> " << note << "; ";
         tx->note = note;
@@ -367,10 +415,12 @@ void QuanLyTaiXe::suaTaiXe() {
 void QuanLyTaiXe::xoaTaiXe() {
     system("cls");
     Utils::printHeader("XOA TAI XE");
+    cout<<"(ESC de quay lai)"<<endl;
     
     string id;
-    cout << "Nhap ID tai xe can xoa (VD: TX001, TX012,...): ";
-    cin >> id;
+    if(! Utils::getInputWithESC(id, "Nhap ID tai xe can xoa (VD: TX001, TX012,...): ")) {
+        return;
+    }
     
     auto itMap = taiXeByID.find(id);
     if (itMap == taiXeByID.end()) {

@@ -35,9 +35,14 @@ void QuanLyAdmin::ghiAdmins() {
 void QuanLyAdmin::dangKyAdmin() {
     system("cls");
     Utils::printHeader("DANG KY TAI KHOAN ADMIN MOI");
+    cout<<"(ESC de quay lai)"<<endl;
+
+    string m;
+
     string username;
-    cout << "Nhap ten dang nhap: ";
-    cin >> username;
+    if(! Utils::getInputWithESC(username, "Nhap ten dang nhap: ")) {
+        return;
+    }
         
     if (admins.find(username) != admins.end()) {
         Utils::setColor(12);
@@ -46,7 +51,6 @@ void QuanLyAdmin::dangKyAdmin() {
         Utils::pause();
         return;
     }
-        
     cout << "Nhap mat khau: ";
     string password = Utils::nhapMatKhauAn();
         
@@ -130,9 +134,11 @@ void QuanLyAdmin::hienThiAdmin() {
 void QuanLyAdmin::xoaAdmin() {
     system("cls");
     Utils::printHeader("XOA ADMIN");
+
     string username;
-    cout << "Nhap ten admin can xoa: ";
-    cin >> username;
+    if(! Utils::getInputWithESC(username, "Nhap ten dang nhap admin can xoa: ")) {
+        return;
+    }
     
     if (username == "admin") {
         Utils::setColor(12);

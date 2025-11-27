@@ -159,21 +159,18 @@ void QuanLyTaXi::themTaxi() {
     while (true) {
         system("cls");
         Utils::printHeader("THEM TAXI");
-        
+        cout<< "(ESC de quay lai)" << endl;
+
         string id = sinhIDXe();
         cout << "ID Xe (tu dong): " << id << endl;
 
         string bienSo, mau, hang, nam, khoang, ngayBD;
         int sucChua, trangThaiChoice;
         
-        string m;
-        cout << "Nhap '0' de quay lai: ";
-        cin >> m;
-        cin.ignore();
         
-        if (m == "0") return;
-        
-        cout << "Nhap bien so xe: "; getline(cin, bienSo);
+        if(! Utils::getInputWithESC(bienSo, "Nhap bien so xe: ")) {
+            return;
+        }
         
         // Kiểm tra biển số trùng
         bool bienSoTrung = false;
@@ -196,14 +193,31 @@ void QuanLyTaXi::themTaxi() {
             continue;
         }
         
-        cout << "Nhap mau xe: "; getline(cin, mau);
-        cout << "Nhap hang xe (VD: Toyota, Honda, Vinfast...): "; getline(cin, hang);
-        cout << "Nhap nam san xuat: "; getline(cin, nam);
-        cout << "Nhap dung tich khoang hanh ly (lit): "; getline(cin, khoang);
-        cout << "Nhap ngay bao duong gan nhat (dd/mm/yyyy): "; getline(cin, ngayBD);
-        cout << "Nhap suc chua (so cho ngoi): "; cin >> sucChua;
-        cout << "Trang thai xe (1=Hoat dong, 0=Bao tri): "; cin >> trangThaiChoice;
-        cin.ignore();
+        if(! Utils::getInputWithESC(mau, "Nhap mau xe: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(hang, "Nhap hang xe (VD: Toyota, Honda, Vinfast...): ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(nam, "Nhap nam san xuat: ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(khoang, "Nhap dung tich khoang hanh ly (lit): ")) {
+            return;
+        }
+        if(! Utils::getInputWithESC(ngayBD, "Nhap ngay bao duong gan nhat (dd/mm/yyyy): ")) {
+            return;
+        }
+        string sucChuaStr;
+        if(! Utils::getInputWithESC(sucChuaStr, "Nhap suc chua (so cho ngoi): ")) {
+            return;
+        }
+        sucChua = stoi(sucChuaStr);
+        string trangThaiStr;
+        if(! Utils::getInputWithESC(trangThaiStr, "Trang thai xe (1=Hoat dong, 0=Bao tri): ")) {
+            return;
+        }
+        trangThaiChoice = stoi(trangThaiStr);
         
         bool trangThai = (trangThaiChoice == 1);
         
@@ -228,10 +242,13 @@ void QuanLyTaXi::themTaxi() {
 void QuanLyTaXi::suaTaxi() {
     system("cls");
     Utils::printHeader("SUA THONG TIN TAXI");
-    
+    cout<<"(ESC de quay lai)"<<endl;
+
     string id;
-    cout << "Nhap ID xe can sua (VD: XE001, XE012,...): ";
-    cin >> id;
+    
+    if(! Utils::getInputWithESC(id, "Nhap ID xe can sua (VD: XE001, XE012,...): ")) {
+        return;
+    }
     
     auto itMap = taxiByID.find(id);
     if (itMap == taxiByID.end()) {
@@ -254,8 +271,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // ID xe
     cout << "ID xe hien tai: " << tx->IDXe << "\n";
-    cout << "Nhap ID moi (Enter de giu nguyen): ";
-    string newID; getline(cin, newID);
+    string newID; 
+    if(! Utils::getInputWithESC(newID, "Nhap ID xe moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!newID.empty() && newID != tx->IDXe) {
         if (taxiByID.count(newID)) {
             Utils::setColor(12);
@@ -272,8 +291,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Biển số
     cout << "Bien so hien tai: " << tx->bienSo << "\n";
-    cout << "Nhap bien so moi (Enter de giu nguyen): ";
-    string bienSo; getline(cin, bienSo);
+    string bienSo;
+    if(! Utils::getInputWithESC(bienSo, "Nhap bien so moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!bienSo.empty() && bienSo != tx->bienSo) {
         bool trung = false;
         for (const auto& t : dsTaxi) {
@@ -295,8 +316,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Màu xe
     cout << "Mau xe hien tai: " << tx->mauXe << "\n";
-    cout << "Nhap mau xe moi (Enter de giu nguyen): ";
-    string mau; getline(cin, mau);
+    string mau;
+    if(! Utils::getInputWithESC(mau, "Nhap mau xe moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!mau.empty() && mau != tx->mauXe) {
         thayDoiLog << "Mau: " << tx->mauXe << " -> " << mau << "; ";
         tx->mauXe = mau;
@@ -304,8 +327,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Hãng xe
     cout << "Hang xe hien tai: " << tx->hangXe << "\n";
-    cout << "Nhap hang xe moi (Enter de giu nguyen): ";
-    string hang; getline(cin, hang);
+    string hang;
+    if(! Utils::getInputWithESC(hang, "Nhap hang xe moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!hang.empty() && hang != tx->hangXe) {
         thayDoiLog << "Hang: " << tx->hangXe << " -> " << hang << "; ";
         tx->hangXe = hang;
@@ -313,8 +338,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Năm sản xuất
     cout << "Nam san xuat hien tai: " << tx->namSX << "\n";
-    cout << "Nhap nam san xuat moi (Enter de giu nguyen): ";
-    string nam; getline(cin, nam);
+    string nam;
+    if(! Utils::getInputWithESC(nam, "Nhap nam san xuat moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!nam.empty() && nam != tx->namSX) {
         thayDoiLog << "Nam SX: " << tx->namSX << " -> " << nam << "; ";
         tx->namSX = nam;
@@ -322,8 +349,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Dung tích khoang hành lý
     cout << "Dung tich khoang hanh ly hien tai: " << tx->dungTichKhoangHanhLy << "\n";
-    cout << "Nhap dung tich moi (Enter de giu nguyen): ";
-    string khoang; getline(cin, khoang);
+    string khoang;
+    if(! Utils::getInputWithESC(khoang, "Nhap dung tich khoang hanh ly moi (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!khoang.empty() && khoang != tx->dungTichKhoangHanhLy) {
         thayDoiLog << "Khoang hanh ly: " << tx->dungTichKhoangHanhLy << " -> " << khoang << "; ";
         tx->dungTichKhoangHanhLy = khoang;
@@ -331,8 +360,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Ngày bảo dưỡng
     cout << "Ngay bao duong gan nhat hien tai: " << tx->ngayBaoDuongGanNhat << "\n";
-    cout << "Nhap ngay bao duong moi (Enter de giu nguyen): ";
-    string ngayBD; getline(cin, ngayBD);
+    string ngayBD;
+    if(! Utils::getInputWithESC(ngayBD, "Nhap ngay bao duong moi (dd/mm/yyyy) (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!ngayBD.empty() && ngayBD != tx->ngayBaoDuongGanNhat) {
         thayDoiLog << "Ngay bao duong: " << tx->ngayBaoDuongGanNhat << " -> " << ngayBD << "; ";
         tx->ngayBaoDuongGanNhat = ngayBD;
@@ -340,8 +371,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Sức chứa
     cout << "Suc chua hien tai: " << tx->sucChua << "\n";
-    cout << "Nhap suc chua moi (Enter de giu nguyen): ";
-    string sc; getline(cin, sc);
+    string sc;
+    if(! Utils::getInputWithESC(sc, "Nhap suc chua moi (so cho ngoi) (Enter de giu nguyen): ")) {
+        return;
+    }
     if (!sc.empty()) {
         try {
             int sucChua = stoi(sc);
@@ -358,8 +391,10 @@ void QuanLyTaXi::suaTaxi() {
     
     // Trạng thái
     cout << "Trang thai hien tai: " << (tx->trangThaiXe ? "Hoat dong" : "Bao tri") << "\n";
-    cout << "Nhap trang thai (1=Hoat dong, 0=Bao tri, Enter de giu nguyen): ";
-    string st; getline(cin, st);
+    string st;
+    if(! Utils::getInputWithESC(st, "Nhap trang thai (1=Hoat dong, 0=Bao tri, Enter de giu nguyen): ")) {
+        return;
+    }
     if (!st.empty()) {
         bool newSt = (st == "1");
         if (newSt != tx->trangThaiXe) {
@@ -390,10 +425,12 @@ void QuanLyTaXi::suaTaxi() {
 void QuanLyTaXi::xoaTaxi() {
     system("cls");
     Utils::printHeader("XOA TAXI");
-    
+    cout<<"(ESC de quay lai)"<<endl;
+
     string id;
-    cout << "Nhap ID xe can xoa (VD: XE001, XE012,...): ";
-    cin >> id;
+    if(! Utils::getInputWithESC(id, "Nhap ID xe can xoa (VD: XE001, XE012,...): ")) {
+        return;
+    }
     
     auto itMap = taxiByID.find(id);
     if (itMap == taxiByID.end()) {
