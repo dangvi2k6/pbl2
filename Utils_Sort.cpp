@@ -21,7 +21,7 @@ void Utils_Sort::quickSortTaiXe(MyVector<TaiXe>& arr, int low, int high,
     if(low<high){
         int pi=partitionTaiXe(arr, low, high, compare);
         quickSortTaiXe(arr, low, pi-1, compare);
-        quickSortTaixe(ar, pi+1, high, compare);
+        quickSortTaiXe(arr, pi+1, high, compare);
     } 
 }
 //Cac ham sap xep tai xe

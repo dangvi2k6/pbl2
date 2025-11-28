@@ -23,6 +23,7 @@ private:
     unordered_map<string, TaXi*>* pTaxiByID;
 
     string sinhIDChuyenXe();
+    
     void ghiLichSuChuyenXe(const string&, const ChuyenXe&, const string& = "");
     void ghiLichSuHoatDong(const string&, const string&,
                             const string&, const string& = "THANH_CONG");
