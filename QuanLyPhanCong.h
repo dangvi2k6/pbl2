@@ -25,10 +25,10 @@ private:
 
     string sinhIDPhanCong();
     void rebuildPhanCongMap();
-    void ghiLichSuChuyenXe(const string&, const ChuyenXe&, const string& = "");
+    void ghiLichSuPhanCong(const string&, const PhanCong&, const string& = "");
     void ghiLichSuHoatDong(const string&, const string&,
                             const string&, const string& = "THANH_CONG");
-                            
+
 public:
     QuanLyPhanCong(const string&,
                    unordered_map<string, TaiXe*>* = nullptr,

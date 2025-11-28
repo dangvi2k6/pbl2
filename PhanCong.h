@@ -25,8 +25,12 @@ public:
     string note;
 public:
     PhanCong(const string& idpc = "", const string& idtx = "", const string& idxe = "", 
-             const string& st = "", const string& et = "", const string& note = "")
-        : IDPC(idpc), IDTX(idtx), IDXe(idxe), StartTime(st), EndTime(et), Note(note) {}
+             const string& day = "", const string& ca = "", const string& gV = "",
+             const string& gR = "", const string& loaiPC = "", bool done = false, 
+             float dt = 0.0f, float soKm = 0.0f, const string& note = "")
+        : IDPC(idpc), IDTX(idtx), IDXe(idxe), ngayLamViec(day), 
+          caLamViec(ca), gioVao(gV), gioRa(gR), loaiPhanCong(loaiPC), 
+          daHoanThanh(done), doanhThu(dt), soKmChay(soKm), note(note) {}
 
     ~PhanCong() {}
 
@@ -40,8 +44,14 @@ public:
         if (!fout.is_open())
             throw runtime_error("Khong mo duoc file phancong.txt de ghi!");
 
-        fout << IDPC << "|" << IDTX << "|" << IDXe << "|" << StartTime << "|"
-            << EndTime << "|" << Note << "\n";
+        fout << IDPC << "|" << IDTX << "|" << IDXe << "|"
+             << ngayLamViec << "|" << caLamViec << "|"
+             << gioVao << "|" << gioRa << "|"
+             << loaiPhanCong << "|"
+             << (daHoanThanh ? "1" : "0") << "|"
+             << doanhThu << "|"
+             << soKmChay << "|"
+             << note << endl;
         fout.close();
     }
 };
