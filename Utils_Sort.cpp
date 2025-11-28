@@ -386,12 +386,12 @@ void Utils_Sort::sapXepPhanCongTheoNgay(MyVector<PhanCong>& arr, bool tangDan) {
     if (tangDan) {
         quickSortPhanCong(arr, 0, arr.size() - 1,
             [](const PhanCong& a, const PhanCong& b) -> bool {
-                return a.ngayPhanCong < b.ngayPhanCong;
+                return a.ngayLamViec < b.ngayLamViec;
             });
     } else {
         quickSortPhanCong(arr, 0, arr.size() - 1,
             [](const PhanCong& a, const PhanCong& b) -> bool {
-                return a.ngayPhanCong > b. ngayPhanCong;
+                return a.ngayLamViec > b.ngayLamViec;
             });
     }
 }

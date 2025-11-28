@@ -1,0 +1,12 @@
+# Object files
+*.o
+
+# Executable files
+*.exe
+main.exe
+
+# Editor files
+*.swp
+*.swo
+*~
+_codeql*
