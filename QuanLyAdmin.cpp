@@ -134,6 +134,7 @@ void QuanLyAdmin::hienThiAdmin() {
 void QuanLyAdmin::xoaAdmin() {
     system("cls");
     Utils::printHeader("XOA ADMIN");
+    cout<<"(ESC de quay lai)"<<endl;
 
     string username;
     if(! Utils::getInputWithESC(username, "Nhap ten dang nhap admin can xoa: ")) {

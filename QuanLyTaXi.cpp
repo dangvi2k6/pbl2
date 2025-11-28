@@ -1,4 +1,5 @@
 #include "QuanLyTaXi.h"
+#include "Utils_Sort.h"
 
 QuanLyTaXi::QuanLyTaXi(const string& admin, unordered_map<string, TaiXe*>* taiXeByID) 
     : currentAdmin(admin), pTaiXeByID(taiXeByID) {
@@ -86,7 +87,6 @@ void QuanLyTaXi::setCurrentAdmin(const string& admin) {
 void QuanLyTaXi::setTaiXeByID(unordered_map<string, TaiXe*>* taiXeByID) {
     pTaiXeByID = taiXeByID;
 }
-
 
 void QuanLyTaXi::docTaxi() {
     ifstream file("cars.txt");
@@ -690,9 +690,11 @@ void QuanLyTaXi::timTaxi() {
 void QuanLyTaXi::xemChiTietTaxi() {
     system("cls");
     Utils::printHeader("XEM CHI TIET TAXI");
+    cout<< "(ESC de quay lai)" << endl;
     string id; 
-    cout << "Nhap ID xe can xem (VD: XE001, XE012,...): "; 
-    cin >> id;
+    if(! Utils::getInputWithESC(id, "Nhap ID xe can xem chi tiet (VD: XE001, XE012,...): ")) { 
+        return; 
+    }
     auto itMap = taxiByID.find(id);
     if (itMap == taxiByID.end()) { 
         Utils::setColor(12); 
@@ -749,4 +751,149 @@ MyVector<TaXi>& QuanLyTaXi::getDSTaxi() {
 
 unordered_map<string, TaXi*>& QuanLyTaXi::getTaxiByID() {
     return taxiByID;
+}
+
+void QuanLyTaXi::sapXepTaxi() {
+    if (dsTaxi. empty()) {
+        Utils::setColor(12);
+        cout << "Danh sach taxi trong!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
+    
+    system("cls");
+    Utils::printHeader("SAP XEP TAXI");
+    
+    cout << "Chon tieu chi sap xep:\n";
+    cout << "1. Sap xep theo ID (tang dan)\n";
+    cout << "2. Sap xep theo ID (giam dan)\n";
+    cout << "3. Sap xep theo bien so (A-Z)\n";
+    cout << "4. Sap xep theo bien so (Z-A)\n";
+    cout << "5. Sap xep theo hang xe (A-Z)\n";
+    cout << "6. Sap xep theo hang xe (Z-A)\n";
+    cout << "7. Sap xep theo nam san xuat (cu -> moi)\n";
+    cout << "8. Sap xep theo nam san xuat (moi -> cu)\n";
+    cout << "9. Sap xep theo suc chua (tang dan)\n";
+    cout << "10. Sap xep theo suc chua (giam dan)\n";
+    cout << "11. Sap xep theo trang thai (Hoat dong truoc)\n";
+    cout << "12. Sap xep theo trang thai (Bao tri truoc)\n";
+    cout << "13. Quay lai\n";
+    cout << "Lua chon: ";
+    
+    int choice;
+    cin >> choice;
+    cin.ignore();
+    
+    switch(choice) {
+        case 1:
+            Utils_Sort::sapXepTaxiTheoID(dsTaxi, true);
+            cout << "\n✓ Da sap xep theo ID tang dan!\n";
+            break;
+            
+        case 2:
+            Utils_Sort::sapXepTaxiTheoID(dsTaxi, false);
+            cout << "\n✓ Da sap xep theo ID giam dan!\n";
+            break;
+            
+        case 3:
+            Utils_Sort::sapXepTaxiTheoBienSo(dsTaxi, true);
+            cout << "\n✓ Da sap xep theo bien so A-Z!\n";
+            break;
+            
+        case 4:
+            Utils_Sort::sapXepTaxiTheoBienSo(dsTaxi, false);
+            cout << "\n✓ Da sap xep theo bien so Z-A!\n";
+            break;
+            
+        case 5:
+            Utils_Sort::sapXepTaxiTheoHangXe(dsTaxi, true);
+            cout << "\n✓ Da sap xep theo hang xe A-Z!\n";
+            break;
+            
+        case 6:
+            Utils_Sort::sapXepTaxiTheoHangXe(dsTaxi, false);
+            cout << "\n✓ Da sap xep theo hang xe Z-A!\n";
+            break;
+            
+        case 7:
+            Utils_Sort::sapXepTaxiTheoNamSX(dsTaxi, true);
+            cout << "\n✓ Da sap xep theo nam san xuat (cu -> moi)!\n";
+            break;
+            
+        case 8:
+            Utils_Sort::sapXepTaxiTheoNamSX(dsTaxi, false);
+            cout << "\n✓ Da sap xep theo nam san xuat (moi -> cu)!\n";
+            break;
+            
+        case 9:
+            Utils_Sort::sapXepTaxiTheoSucChua(dsTaxi, true);
+            cout << "\n✓ Da sap xep theo suc chua tang dan!\n";
+            break;
+            
+        case 10:
+            Utils_Sort::sapXepTaxiTheoSucChua(dsTaxi, false);
+            cout << "\n✓ Da sap xep theo suc chua giam dan!\n";
+            break;
+            
+        case 11:
+            Utils_Sort::sapXepTaxiTheoTrangThai(dsTaxi, true);
+            cout << "\n✓ Da sap xep theo trang thai (Hoat dong truoc)!\n";
+            break;
+            
+        case 12:
+            Utils_Sort::sapXepTaxiTheoTrangThai(dsTaxi, false);
+            cout << "\n✓ Da sap xep theo trang thai (Bao tri truoc)!\n";
+            break;
+            
+        case 13:
+            return;
+            
+        default:
+            Utils::setColor(12);
+            cout << "Lua chon khong hop le!\n";
+            Utils::setColor(7);
+            Utils::pause();
+            return;
+    }
+    
+    rebuildTaxiMap();
+    hienThiDanhSachTaxiDaSapXep();
+    ghiTaxi();
+    
+    ghiLichSuHoatDong("SAP_XEP_TAXI", 
+                      "Tieu chi: " + to_string(choice), 
+                      "So luong: " + to_string(dsTaxi.size()), 
+                      "THANH_CONG");
+}
+
+void QuanLyTaXi::hienThiDanhSachTaxiDaSapXep() {
+    system("cls");
+    Utils::printHeader("DANH SACH TAXI DA SAP XEP");
+    
+    cout << left 
+        << setw(8) << "ID" 
+        << setw(12) << "Bien so" 
+        << setw(10) << "Mau" 
+        << setw(12) << "Hang" 
+        << setw(8) << "Nam SX" 
+        << setw(10) << "Suc chua" 
+        << setw(12) << "Bao duong" 
+        << setw(12) << "Trang thai" << endl;
+    cout << string(84, '-') << endl;
+    
+    for (const auto& tx : dsTaxi) {
+        cout << left 
+            << setw(8) << tx. IDXe 
+            << setw(12) << tx.bienSo 
+            << setw(10) << tx.mauXe 
+            << setw(12) << tx.hangXe 
+            << setw(8) << tx.namSX 
+            << setw(10) << tx.sucChua 
+            << setw(12) << tx.ngayBaoDuongGanNhat 
+            << setw(12) << (tx.trangThaiXe ? "Hoat dong" : "Bao tri") << endl;
+    }
+    
+    cout << "\nTong so xe: " << dsTaxi. size() << endl;
+    Utils::pause();
 }

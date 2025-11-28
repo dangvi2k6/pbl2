@@ -48,6 +48,9 @@ public:
     void hienThiChuyenXe();
 
     MyVector<ChuyenXe>& getDSChuyenXe();
+
+    void sapXepChuyenXe();
+    void hienThiDanhSachChuyenXeDaSapXep();
 };
 
 #endif

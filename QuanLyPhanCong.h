@@ -44,6 +44,9 @@ public:
     void timPhanCong();
 
     MyVector<PhanCong>& getDSPhanCong();
+
+    void sapXepPhanCong();
+    void hienThiDanhSachPhanCongDaSapXep();
     
 };
 

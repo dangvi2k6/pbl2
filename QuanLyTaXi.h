@@ -45,7 +45,8 @@ public:
     TaXi* timTaxiByID(const string&);
     MyVector<TaXi>& getDSTaxi();
     unordered_map<string, TaXi*>& getTaxiByID();
-
+    void sapXepTaxi();
+    void hienThiDanhSachTaxiDaSapXep();
 };
 
 #endif

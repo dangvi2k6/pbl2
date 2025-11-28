@@ -45,7 +45,8 @@ public:
     TaiXe* timTaiXeByID(const string&);
     MyVector<TaiXe>& getDSTaiXe();
     unordered_map<string, TaiXe*>& getTaiXeByID();
-
+    void sapXepTaiXe();
+    void hienThiDanhSachDaSapXep();
 };
 
 #endif

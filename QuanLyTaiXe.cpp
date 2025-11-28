@@ -1,4 +1,5 @@
 #include "QuanLyTaiXe.h"
+#include "Utils_Sort.h"
 
 QuanLyTaiXe::QuanLyTaiXe(const string& admin, MyVector<TaXi>* dsTaxi) 
     : currentAdmin(admin), pDsTaxi(dsTaxi) {
@@ -831,4 +832,139 @@ MyVector<TaiXe>& QuanLyTaiXe::getDSTaiXe() {
 
 unordered_map<string, TaiXe*>& QuanLyTaiXe::getTaiXeByID() {
     return taiXeByID;
+}
+
+void QuanLyTaiXe::sapXepTaiXe() {
+    if (dsTaiXe.empty()) {
+        Utils::setColor(12);
+        cout << "Danh sach tai xe trong!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
+    
+    system("cls");
+    Utils::printHeader("SAP XEP TAI XE");
+    
+    cout << "Chon tieu chi sap xep:\n";
+    cout << "1. Sap xep theo ID (tang dan)\n";
+    cout << "2. Sap xep theo ID (giam dan)\n";
+    cout << "3. Sap xep theo ten (A-Z)\n";
+    cout << "4. Sap xep theo ten (Z-A)\n";
+    cout << "5. Sap xep theo ngay gia nhap (cu -> moi)\n";
+    cout << "6. Sap xep theo ngay gia nhap (moi -> cu)\n";
+    cout << "7. Sap xep theo hang GPLX (A-Z)\n";
+    cout << "8. Sap xep theo hang GPLX (Z-A)\n";
+    cout << "9. Sap xep theo trang thai (Ranh truoc)\n";
+    cout << "10. Sap xep theo trang thai (Ban truoc)\n";
+    cout << "11. Quay lai\n";
+    cout << "Lua chon: ";
+    
+    int choice;
+    cin >> choice;
+    cin.ignore();
+    
+    switch(choice) {
+        case 1:
+            Utils_Sort::sapXepTaiXeTheoID(dsTaiXe, true);
+            cout << "\n✓ Da sap xep theo ID tang dan!\n";
+            break;
+            
+        case 2:
+            Utils_Sort::sapXepTaiXeTheoID(dsTaiXe, false);
+            cout << "\n✓ Da sap xep theo ID giam dan!\n";
+            break;
+            
+        case 3:
+            Utils_Sort::sapXepTaiXeTheoTen(dsTaiXe, true);
+            cout << "\n✓ Da sap xep theo ten A-Z!\n";
+            break;
+            
+        case 4:
+            Utils_Sort::sapXepTaiXeTheoTen(dsTaiXe, false);
+            cout << "\n✓ Da sap xep theo ten Z-A!\n";
+            break;
+            
+        case 5:
+            Utils_Sort::sapXepTaiXeTheoNgayGiaNhap(dsTaiXe, true);
+            cout << "\n✓ Da sap xep theo ngay gia nhap (cu -> moi)!\n";
+            break;
+            
+        case 6:
+            Utils_Sort::sapXepTaiXeTheoNgayGiaNhap(dsTaiXe, false);
+            cout << "\n✓ Da sap xep theo ngay gia nhap (moi -> cu)!\n";
+            break;
+            
+        case 7:
+            Utils_Sort::sapXepTaiXeTheoHangGPLX(dsTaiXe, true);
+            cout << "\n✓ Da sap xep theo hang GPLX (A-Z)!\n";
+            break;
+            
+        case 8:
+            Utils_Sort::sapXepTaiXeTheoHangGPLX(dsTaiXe, false);
+            cout << "\n✓ Da sap xep theo hang GPLX (Z-A)!\n";
+            break;
+            
+        case 9:
+            Utils_Sort::sapXepTaiXeTheoTrangThai(dsTaiXe, true);
+            cout << "\n✓ Da sap xep theo trang thai (Ranh truoc)!\n";
+            break;
+            
+        case 10:
+            Utils_Sort::sapXepTaiXeTheoTrangThai(dsTaiXe, false);
+            cout << "\n✓ Da sap xep theo trang thai (Ban truoc)!\n";
+            break;
+            
+        case 11:
+            return;
+            
+        default:
+            Utils::setColor(12);
+            cout << "Lua chon khong hop le!\n";
+            Utils::setColor(7);
+            Utils::pause();
+            return;
+    }
+
+    rebuildTaiXeMap();
+    hienThiDanhSachDaSapXep();
+    ghiTaiXe();
+    
+    ghiLichSuHoatDong("SAP_XEP_TAI_XE", 
+                      "Tieu chi: " + to_string(choice), 
+                      "So luong: " + to_string(dsTaiXe.size()), 
+                      "THANH_CONG");
+}
+
+void QuanLyTaiXe::hienThiDanhSachDaSapXep() {
+    system("cls");
+    Utils::printHeader("DANH SACH TAI XE DA SAP XEP");
+    
+    cout << left 
+        << setw(10) << "ID"
+        << setw(25) << "Ho Ten"
+        << setw(15) << "Ngay sinh"
+        << setw(18) << "CCCD"
+        << setw(15) << "SDT"
+        << setw(15) << "So GPLX"
+        << setw(10) << "Hang"
+        << setw(12) << "Gioi tinh"
+        << setw(12) << "Trang thai" << endl;
+    cout << string(132, '-') << endl;
+    
+    for (const auto& tx : dsTaiXe) {
+        cout << left 
+            << setw(10) << tx.IDTX 
+            << setw(25) << tx.tenTaiXe
+            << setw(15) << tx.birth
+            << setw(18) << tx.soCCCD
+            << setw(15) << tx.sdt
+            << setw(15) << tx.soGPLX
+            << setw(10) << tx.hangGPLX
+            << setw(12) << (tx.gioiTinh ?  "Nam" : "Nu")
+            << setw(12) << (tx.trangThaiTX ? "Ranh" : "Ban") << endl;
+    }
+    
+    cout << "\nTong so tai xe: " << dsTaiXe. size() << endl;
+    Utils::pause();
 }

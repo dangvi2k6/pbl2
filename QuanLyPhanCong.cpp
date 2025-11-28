@@ -1,4 +1,5 @@
 #include "QuanLyPhanCong.h"
+#include "Utils_Sort.h"
 
 QuanLyPhanCong::QuanLyPhanCong(const string& admin,
                 unordered_map<string, TaiXe*>* taiXeByID,
@@ -401,4 +402,107 @@ void QuanLyPhanCong::timPhanCong() {
 
 MyVector<PhanCong>& QuanLyPhanCong::getDSPhanCong() {
     return dsPhanCong;
+}
+
+void QuanLyPhanCong::sapXepPhanCong() {
+    if (dsPhanCong.empty()) {
+        Utils::setColor(12);
+        cout << "Danh sach phan cong trong!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
+    
+    system("cls");
+    Utils::printHeader("SAP XEP PHAN CONG");
+    
+    cout << "Chon tieu chi sap xep:\n";
+    cout << "1. Sap xep theo ID phan cong (tang dan)\n";
+    cout << "2. Sap xep theo ID phan cong (giam dan)\n";
+    cout << "3. Sap xep theo ngay phan cong (cu -> moi)\n";
+    cout << "4. Sap xep theo ngay phan cong (moi -> cu)\n";
+    cout << "5.  Sap xep theo ca lam viec (A-Z)\n";
+    cout << "6. Sap xep theo ca lam viec (Z-A)\n";
+    cout << "7. Quay lai\n";
+    cout << "Lua chon: ";
+    
+    int choice;
+    cin >> choice;
+    cin.ignore();
+    
+    switch(choice) {
+        case 1:
+            Utils_Sort::sapXepPhanCongTheoID(dsPhanCong, true);
+            cout << "\n✓ Da sap xep theo ID phan cong tang dan!\n";
+            break;
+            
+        case 2:
+            Utils_Sort::sapXepPhanCongTheoID(dsPhanCong, false);
+            cout << "\n✓ Da sap xep theo ID phan cong giam dan!\n";
+            break;
+            
+        case 3:
+            Utils_Sort::sapXepPhanCongTheoNgay(dsPhanCong, true);
+            cout << "\n✓ Da sap xep theo ngay phan cong (cu -> moi)!\n";
+            break;
+            
+        case 4:
+            Utils_Sort::sapXepPhanCongTheoNgay(dsPhanCong, false);
+            cout << "\n✓ Da sap xep theo ngay phan cong (moi -> cu)!\n";
+            break;
+            
+        case 5:
+            Utils_Sort::sapXepPhanCongTheoCa(dsPhanCong, true);
+            cout << "\n✓ Da sap xep theo ca lam viec (A-Z)!\n";
+            break;
+            
+        case 6:
+            Utils_Sort::sapXepPhanCongTheoCa(dsPhanCong, false);
+            cout << "\n✓ Da sap xep theo ca lam viec (Z-A)!\n";
+            break;
+            
+        case 7:
+            return;
+            
+        default:
+            Utils::setColor(12);
+            cout << "Lua chon khong hop le!\n";
+            Utils::setColor(7);
+            Utils::pause();
+            return;
+    }
+    
+    rebuildPhanCongMap();
+    hienThiDanhSachPhanCongDaSapXep();
+    ghiPhanCong();
+    
+    ghiLichSuHoatDong("SAP_XEP_PHAN_CONG", 
+                      "Tieu chi: " + to_string(choice), 
+                      "So luong: " + to_string(dsPhanCong.size()), 
+                      "THANH_CONG");
+}
+
+void QuanLyPhanCong::hienThiDanhSachPhanCongDaSapXep() {
+    system("cls");
+    Utils::printHeader("DANH SACH PHAN CONG DA SAP XEP");
+    
+    cout << left 
+        << setw(12) << "ID PC"
+        << setw(10) << "ID TX"
+        << setw(10) << "ID Xe"
+        << setw(20) << "Ngay phan cong"
+        << setw(15) << "Ca lam viec" << endl;
+    cout << string(67, '-') << endl;
+    
+    for (const auto& pc : dsPhanCong) {
+        cout << left 
+            << setw(12) << pc. IDPC
+            << setw(10) << pc.IDTX
+            << setw(10) << pc.IDXe
+            << setw(20) << pc.ngayPhanCong
+            << setw(15) << pc.caLamViec << endl;
+    }
+    
+    cout << "\nTong so phan cong: " << dsPhanCong. size() << endl;
+    Utils::pause();
 }

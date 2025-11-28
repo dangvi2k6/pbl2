@@ -107,7 +107,8 @@ void menuQuanLyTaiXe(QuanLyTaiXe& qlTaiXe) {
             "3. Xoa Tai Xe",
             "4. Hien thi danh sach Tai Xe",
             "5. Tim Tai Xe",
-            "6. Quay lai"
+            "6. Sap xep tai xe",
+            "7. Quay lai"
         });
 
         if (c == -1 || c == 5) break;
@@ -117,6 +118,7 @@ void menuQuanLyTaiXe(QuanLyTaiXe& qlTaiXe) {
         else if (c == 2) qlTaiXe.xoaTaiXe();
         else if (c == 3) qlTaiXe.hienThiTaiXe();
         else if (c == 4) qlTaiXe.timTaiXe();
+        else if (c == 5) qlTaiXe.sapXepTaiXe(); 
     }
 }
 
@@ -129,7 +131,8 @@ void menuQuanLyTaxi(QuanLyTaXi& qlTaxi) {
             "4. Hien thi danh sach Taxi",
             "5. Tim Taxi",
             "6. Xem chi tiet Taxi",
-            "7. Quay lai"
+            "7. Sap xep Taxi",
+            "8. Quay lai"
         });
 
         if (c == -1 || c == 6) break;
@@ -140,6 +143,7 @@ void menuQuanLyTaxi(QuanLyTaXi& qlTaxi) {
         else if (c == 3) qlTaxi.hienThiTaxi();
         else if (c == 4) qlTaxi.timTaxi();
         else if (c == 5) qlTaxi.xemChiTietTaxi();
+        else if (c == 6) qlTaxi.sapXepTaxi();
     }
 }
 
@@ -151,7 +155,8 @@ void menuQuanLyChuyenXe(QuanLyChuyenXe& qlChuyenXe) {
             "3. Xoa chuyen xe",
             "4. Tim chuyen xe",
             "5. Hien thi danh sach chuyen xe",
-            "6. Quay lai"
+            "6. Sap xep chuyen xe",
+            "7. Quay lai"
         });
 
         if (c == -1 || c == 5) break;
@@ -161,7 +166,9 @@ void menuQuanLyChuyenXe(QuanLyChuyenXe& qlChuyenXe) {
         else if (c == 2) qlChuyenXe.xoaChuyenXe();
         else if (c == 3) qlChuyenXe.timChuyenXe();
         else if (c == 4) qlChuyenXe.hienThiChuyenXe();
+        else if (c == 5) qlChuyenXe.sapXepChuyenXe();
     }
+
 }
 
 void menuQuanLyPhanCong(QuanLyPhanCong& qlPhanCong) {
@@ -172,7 +179,8 @@ void menuQuanLyPhanCong(QuanLyPhanCong& qlPhanCong) {
             "3. Xoa phan cong",
             "4. Hien thi danh sach phan cong",
             "5. Tim kiem phan cong",
-            "6. Quay lai"
+            "6. Sap xep phan cong",
+            "7. Quay lai"
         });
 
         if (c == -1 || c == 5) break;
@@ -182,6 +190,7 @@ void menuQuanLyPhanCong(QuanLyPhanCong& qlPhanCong) {
         else if (c == 2) qlPhanCong.xoaPhanCong();
         else if (c == 3) qlPhanCong.hienThiPhanCong();
         else if (c == 4) qlPhanCong.timPhanCong();
+        else if (c == 5) qlPhanCong.sapXepPhanCong();
     }
 }
 

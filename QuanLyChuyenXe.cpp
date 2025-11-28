@@ -1,4 +1,5 @@
 #include "QuanLyChuyenXe.h"
+#include "Utils_Sort.h"
 
 QuanLyChuyenXe::QuanLyChuyenXe(const string& admin, 
                 unordered_map<string, TaiXe*>* taiXeByID,
@@ -733,3 +734,130 @@ MyVector<ChuyenXe>& QuanLyChuyenXe::getDSChuyenXe() {
     return dsChuyenXe;
 }
 
+void QuanLyChuyenXe::sapXepChuyenXe() {
+    if (dsChuyenXe.empty()) {
+        Utils::setColor(12);
+        cout << "Danh sach chuyen xe trong!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
+    
+    system("cls");
+    Utils::printHeader("SAP XEP CHUYEN XE");
+    
+    cout << "Chon tieu chi sap xep:\n";
+    cout << "1.  Sap xep theo ID chuyen (tang dan)\n";
+    cout << "2. Sap xep theo thoi diem (cu -> moi)\n";
+    cout << "3. Sap xep theo thoi diem (moi -> cu)\n";
+    cout << "4. Sap xep theo khoang cach (tang dan)\n";
+    cout << "5. Sap xep theo khoang cach (giam dan)\n";
+    cout << "6.  Sap xep theo cuoc phi (tang dan)\n";
+    cout << "7.  Sap xep theo cuoc phi (giam dan)\n";
+    cout << "8. Sap xep theo thoi gian (tang dan)\n";
+    cout << "9. Sap xep theo ten khach (A-Z)\n";
+    cout << "10. Quay lai\n";
+    cout << "Lua chon: ";
+    
+    int choice;
+    cin >> choice;
+    cin.ignore();
+    
+    switch(choice) {
+        case 1:
+            Utils_Sort::sapXepChuyenXeTheoID(dsChuyenXe, true);
+            cout << "\n✓ Da sap xep theo ID chuyen tang dan!\n";
+            break;
+            
+        case 2:
+            Utils_Sort::sapXepChuyenXeTheoThoiDiem(dsChuyenXe, true);
+            cout << "\n✓ Da sap xep theo thoi diem (cu -> moi)!\n";
+            break;
+            
+        case 3:
+            Utils_Sort::sapXepChuyenXeTheoThoiDiem(dsChuyenXe, false);
+            cout << "\n✓ Da sap xep theo thoi diem (moi -> cu)!\n";
+            break;
+            
+        case 4:
+            Utils_Sort::sapXepChuyenXeTheoKhoangCach(dsChuyenXe, true);
+            cout << "\n✓ Da sap xep theo khoang cach tang dan!\n";
+            break;
+            
+        case 5:
+            Utils_Sort::sapXepChuyenXeTheoKhoangCach(dsChuyenXe, false);
+            cout << "\n✓ Da sap xep theo khoang cach giam dan!\n";
+            break;
+            
+        case 6:
+            Utils_Sort::sapXepChuyenXeTheoCuocPhi(dsChuyenXe, true);
+            cout << "\n✓ Da sap xep theo cuoc phi tang dan!\n";
+            break;
+            
+        case 7:
+            Utils_Sort::sapXepChuyenXeTheoCuocPhi(dsChuyenXe, false);
+            cout << "\n✓ Da sap xep theo cuoc phi giam dan!\n";
+            break;
+            
+        case 8:
+            Utils_Sort::sapXepChuyenXeTheoThoiGian(dsChuyenXe, true);
+            cout << "\n✓ Da sap xep theo thoi gian tang dan!\n";
+            break;
+            
+        case 9:
+            Utils_Sort::sapXepChuyenXeTheoTenKhach(dsChuyenXe, true);
+            cout << "\n✓ Da sap xep theo ten khach A-Z!\n";
+            break;
+            
+        case 10:
+            return;
+            
+        default:
+            Utils::setColor(12);
+            cout << "Lua chon khong hop le!\n";
+            Utils::setColor(7);
+            Utils::pause();
+            return;
+    }
+    
+    hienThiDanhSachChuyenXeDaSapXep();
+    ghiChuyenXe();
+    
+    ghiLichSuHoatDong("SAP_XEP_CHUYEN_XE", 
+                      "Tieu chi: " + to_string(choice), 
+                      "So luong: " + to_string(dsChuyenXe.size()), 
+                      "THANH_CONG");
+}
+
+void QuanLyChuyenXe::hienThiDanhSachChuyenXeDaSapXep() {
+    system("cls");
+    Utils::printHeader("DANH SACH CHUYEN XE DA SAP XEP");
+    
+    cout << left 
+        << setw(10) << "ID Chuyen"
+        << setw(10) << "ID TX"
+        << setw(10) << "ID Xe"
+        << setw(20) << "Ten khach"
+        << setw(15) << "SDT"
+        << setw(20) << "Thoi diem"
+        << setw(12) << "KC (km)"
+        << setw(12) << "TG (h)"
+        << setw(15) << "Cuoc phi" << endl;
+    cout << string(124, '-') << endl;
+    
+    for (const auto& cx : dsChuyenXe) {
+        cout << left 
+            << setw(10) << cx.IDChuyen
+            << setw(10) << cx. IDTX
+            << setw(10) << cx.IDXe
+            << setw(20) << cx.tenKhach
+            << setw(15) << cx.sdtKhach
+            << setw(20) << cx.thoiDiem
+            << setw(12) << fixed << setprecision(2) << cx.khoangCach
+            << setw(12) << fixed << setprecision(2) << cx.thoiGian
+            << setw(15) << fixed << setprecision(0) << cx.cuocPhi << endl;
+    }
+    
+    cout << "\nTong so chuyen xe: " << dsChuyenXe.size() << endl;
+    Utils::pause();
+}
