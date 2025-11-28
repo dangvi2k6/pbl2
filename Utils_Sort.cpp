@@ -48,12 +48,12 @@ void Utils_Sort::sapXepTaiXeTheoTen(MyVector<TaiXe>& arr, bool tangDan) {
     if (tangDan) {
         quickSortTaiXe(arr, 0, arr.size() - 1,
             [](const TaiXe& a, const TaiXe& b) -> bool {
-                return a.tenTaiXe < b.tenTaiXe;
+                return a.tenTX < b.tenTX;
             });
     } else {
         quickSortTaiXe(arr, 0, arr.size() - 1,
             [](const TaiXe& a, const TaiXe& b) -> bool {
-                return a.tenTaiXe > b.tenTaiXe;
+                return a.tenTX > b.tenTX;
             });
     }
 }
@@ -90,6 +90,21 @@ void Utils_Sort::sapXepTaiXeTheoTrangThai(MyVector<TaiXe>& arr, bool ranhTruoc) 
     }
 }
 
+void Utils_Sort::sapXepTaiXeTheoNgayGiaNhap(MyVector<TaiXe>& arr, bool tangDan) {
+    if (arr.empty()) return;
+    
+    if (tangDan) {
+        quickSortTaiXe(arr, 0, arr.size() - 1,
+            [](const TaiXe& a, const TaiXe& b) -> bool {
+                return a.ngayGiaNhap < b.ngayGiaNhap;
+            });
+    } else {
+        quickSortTaiXe(arr, 0, arr.size() - 1,
+            [](const TaiXe& a, const TaiXe& b) -> bool {
+                return a.ngayGiaNhap > b.ngayGiaNhap;
+            });
+    }
+}
 //Partition cho taxi
 int Utils_Sort::partitionTaxi(MyVector<TaXi>& arr, int low, int high,
                                bool (*compare)(const TaXi&, const TaXi&)) {
@@ -386,12 +401,12 @@ void Utils_Sort::sapXepPhanCongTheoNgay(MyVector<PhanCong>& arr, bool tangDan) {
     if (tangDan) {
         quickSortPhanCong(arr, 0, arr.size() - 1,
             [](const PhanCong& a, const PhanCong& b) -> bool {
-                return a.ngayPhanCong < b.ngayPhanCong;
+                return a.ngayLamViec < b.ngayLamViec;
             });
     } else {
         quickSortPhanCong(arr, 0, arr.size() - 1,
             [](const PhanCong& a, const PhanCong& b) -> bool {
-                return a.ngayPhanCong > b. ngayPhanCong;
+                return a.ngayLamViec > b. ngayLamViec;
             });
     }
 }

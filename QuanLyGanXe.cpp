@@ -32,7 +32,7 @@ void QuanLyGanXe::ghiLog(const string& thaoTac, const string& noiDung) {
 }
 
 void QuanLyGanXe::ghiLichSuChiTiet(const string& maGhiNhan, const string& loaiThaoTac,
-                        const string& idTaiXe, const string& tenTaiXe, const string& gplxTaiXe,
+                        const string& idTaiXe, const string& hoDemTX, const string& tenTX, const string& gplxTaiXe,
                         const string& idXe, const string& bienSo, const string& loaiXe, int sucChua,
                         const string& trangThai, const string& ghiChu) {
     ofstream file("gan_taixe_xe_history.txt", ios::app);
@@ -42,7 +42,7 @@ void QuanLyGanXe::ghiLichSuChiTiet(const string& maGhiNhan, const string& loaiTh
     file << "Thoi gian: " << Utils::layThoiGianHienTai() << "\n";
     file << "Nguoi thuc hien: " << currentAdmin << "\n";
     file << "Loai thao tac: " << loaiThaoTac << "\n";
-    file << "Tai xe: " << idTaiXe << " - " << tenTaiXe << " (GPLX: " << gplxTaiXe << ")\n";
+    file << "Tai xe: " << idTaiXe << " - " << hoDemTX << tenTX << " (GPLX: " << gplxTaiXe << ")\n";
     file << "Xe: " << idXe << " - " << bienSo << " (" << loaiXe << ", " << sucChua << " cho)\n";
     file << "Trang thai: " << trangThai << "\n";
     if (!ghiChu.empty()) {
@@ -111,7 +111,7 @@ void QuanLyGanXe::ganTaiXeChoXe() {
             if (pTaiXeByID) {
                 auto it = pTaiXeByID->find(id);
                 if (it != pTaiXeByID->end()) {
-                    cout << "  " << stt++ << ". " << it->second->tenTaiXe 
+                    cout << "  " << stt++ << ". " << it->second->hoDemTX << it->second->tenTX 
                             << " (" << id << ") - GPLX: " << it->second->hangGPLX << endl;
                 }
             }
@@ -146,7 +146,7 @@ void QuanLyGanXe::ganTaiXeChoXe() {
         Utils::setColor(12);
         cout << "Tai xe da duoc gan cho xe nay!\n";
         Utils::setColor(7);
-        ghiLog("GAN_THAT_BAI", "Tai xe " + idTX + " (" + tx->tenTaiXe + ") da duoc gan cho xe " + idXe);
+        ghiLog("GAN_THAT_BAI", "Tai xe " + idTX + " (" + tx->hoDemTX + tx->tenTX + ") da duoc gan cho xe " + idXe);
         Utils::pause();
         return;
     }
@@ -181,8 +181,8 @@ void QuanLyGanXe::ganTaiXeChoXe() {
 
     // Ghi lịch sử chi tiết và log
     string ma = taoMaGhiNhan();
-    ghiLichSuChiTiet(ma, "GAN", idTX, tx->tenTaiXe, tx->hangGPLX, xe->IDXe, xe->bienSo, xe->hangXe, xe->sucChua, "Da gan tai xe cho xe");
-    ghiLog("GAN_THANH_CONG", "Da gan tai xe " + idTX + " (" + tx->tenTaiXe + ") cho xe " + idXe);
+    ghiLichSuChiTiet(ma, "GAN", idTX, tx->hoDemTX, tx->tenTX, tx->hangGPLX, xe->IDXe, xe->bienSo, xe->hangXe, xe->sucChua, "Da gan tai xe cho xe");
+    ghiLog("GAN_THANH_CONG", "Da gan tai xe " + idTX + " (" + tx->hoDemTX + tx->tenTX + ") cho xe " + idXe);
 
     Utils::setColor(10);
     cout << "Gan tai xe thanh cong!\n";
@@ -229,7 +229,7 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
         if (pTaiXeByID) {
             auto it = pTaiXeByID->find(xe->dsTaiXe[i]);
             if (it != pTaiXeByID->end()) {
-                cout << i+1 << ". " << it->second->tenTaiXe << " (" << xe->dsTaiXe[i] << ")\n";
+                cout << i+1 << ". " << it->second->hoDemTX << it->second->tenTX<< " (" << xe->dsTaiXe[i] << ")\n";
             } else {
                 cout << i+1 << ". " << xe->dsTaiXe[i] << "\n";
             }
@@ -254,13 +254,15 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
     }
     
     string idTX = xe->dsTaiXe[stt-1];
+    string hd = "";
     string ten = "Unknown";
     string gplx = "";
     
     if (pTaiXeByID) {
         auto itTX = pTaiXeByID->find(idTX);
         if (itTX != pTaiXeByID->end()) {
-            ten = itTX->second->tenTaiXe;
+            hd = itTX->second->hoDemTX;
+            ten = itTX->second->tenTX;
             gplx = itTX->second->hangGPLX;
         }
     }
@@ -268,8 +270,8 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
     xe->dsTaiXe.erase(xe->dsTaiXe.begin() + (stt-1));
 
     string ma = taoMaGhiNhan();
-    ghiLichSuChiTiet(ma, "HUY_GAN", idTX, ten, gplx, xe->IDXe, xe->bienSo, xe->hangXe, xe->sucChua, "Da huy gan tai xe");
-    ghiLog("HUY_GAN", "Da huy gan tai xe " + idTX + " (" + ten + ") khoi xe " + idXe);
+    ghiLichSuChiTiet(ma, "HUY_GAN", idTX, hd, ten, gplx, xe->IDXe, xe->bienSo, xe->hangXe, xe->sucChua, "Da huy gan tai xe");
+    ghiLog("HUY_GAN", "Da huy gan tai xe " + idTX + " (" + hd + ten + ") khoi xe " + idXe);
 
     Utils::setColor(10); 
     cout << "Huy gan thanh cong!\n"; 

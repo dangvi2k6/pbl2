@@ -22,7 +22,7 @@ private:
 
     string taoMaGhiNhan();
     void ghiLog(const string&, const string&);
-    void ghiLichSuChiTiet(const string&, const string&,
+    void ghiLichSuChiTiet(const string&, const string&, const string&,
                           const string&, const string&, const string&,
                           const string&, const string&, const string&, int,
                           const string&, const string& = "");

@@ -6,7 +6,7 @@
 #include "QuanLyChuyenXe.h"
 #include "QuanLyPhanCong.h"
 #include "QuanLyGanXe.h"
-
+//g++ main.cpp QuanLyAdmin.cpp QuanLyTaiXe.cpp QuanLyTaXi.cpp QuanLyChuyenXe.cpp QuanLyPhanCong.cpp QuanLyGanXe.cpp Utils_Sort.cpp -o main.exe
 using namespace std;
 
 void drawBox(int left, int top, int width, int height) {
@@ -111,7 +111,7 @@ void menuQuanLyTaiXe(QuanLyTaiXe& qlTaiXe) {
             "7. Quay lai"
         });
 
-        if (c == -1 || c == 5) break;
+        if (c == -1 || c == 6) break;
 
         if (c == 0) qlTaiXe.themTaiXe();
         else if (c == 1) qlTaiXe.suaTaiXe();
@@ -135,7 +135,7 @@ void menuQuanLyTaxi(QuanLyTaXi& qlTaxi) {
             "8. Quay lai"
         });
 
-        if (c == -1 || c == 6) break;
+        if (c == -1 || c == 7) break;
 
         if (c == 0) qlTaxi.themTaxi();
         else if (c == 1) qlTaxi.suaTaxi();
@@ -159,7 +159,7 @@ void menuQuanLyChuyenXe(QuanLyChuyenXe& qlChuyenXe) {
             "7. Quay lai"
         });
 
-        if (c == -1 || c == 5) break;
+        if (c == -1 || c == 6) break;
 
         if (c == 0) qlChuyenXe.themChuyenXe();
         else if (c == 1) qlChuyenXe.suaChuyenXe();
@@ -183,7 +183,7 @@ void menuQuanLyPhanCong(QuanLyPhanCong& qlPhanCong) {
             "7. Quay lai"
         });
 
-        if (c == -1 || c == 5) break;
+        if (c == -1 || c == 6) break;
 
         if (c == 0) qlPhanCong.themPhanCong();
         else if (c == 1) qlPhanCong.suaPhanCong();

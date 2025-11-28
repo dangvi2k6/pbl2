@@ -520,7 +520,7 @@ void QuanLyTaXi::hienThiTaxi() {
                 for (const auto& idTX : tx.dsTaiXe) {
                     auto it = pTaiXeByID->find(idTX);
                     if (it != pTaiXeByID->end()) {
-                        dsTenTaiXe += it->second->tenTaiXe + ", ";
+                        dsTenTaiXe += it->second->tenTX + ", ";
                     }
                 }
                 if (!dsTenTaiXe.empty()) {
@@ -671,7 +671,7 @@ void QuanLyTaXi::timTaxi() {
                 for (const auto& idTX : tx->dsTaiXe) {
                     auto it = pTaiXeByID->find(idTX);
                     if (it != pTaiXeByID->end()) {
-                        dsTenTaiXe += it->second->tenTaiXe + ", ";
+                        dsTenTaiXe += it->second->tenTX + ", ";
                     }
                 }
                 if (!dsTenTaiXe.empty()) {
@@ -725,7 +725,7 @@ void QuanLyTaXi::xemChiTietTaxi() {
             if (pTaiXeByID) {
                 auto it = pTaiXeByID->find(idTX);
                 if (it != pTaiXeByID->end()) {
-                    cout << "  " << stt++ << ". " << it->second->tenTaiXe << " (ID: " << idTX << ")\n";
+                    cout << "  " << stt++ << ". " << it->second->tenTX << " (ID: " << idTX << ")\n";
                 } else {
                     cout << "  " << stt++ << ". " << idTX << "\n";
                 }

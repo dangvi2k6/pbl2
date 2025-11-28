@@ -39,7 +39,7 @@ void QuanLyTaiXe::ghiLichSuTaiXe(const string& hanhDong, const TaiXe& tx, const 
     file << "Hanh dong: " << hanhDong << "\n";
     file << "--- Thong tin tai xe ---\n";
     file << "ID: " << tx.IDTX << "\n";
-    file << "Ho ten: " << tx.tenTaiXe << "\n";
+    file << "Ho ten: " << tx.hoDemTX << tx.tenTX << "\n";
     file << "Ngay sinh: " << tx.birth << "\n";
     file << "CCCD: " << tx.soCCCD << "\n";
     file << "Dia chi: " << tx.diaChi << "\n";
@@ -92,9 +92,10 @@ void QuanLyTaiXe::docTaiXe() {
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
-        string id, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGiaNhap, note;
+        string id, hd, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGiaNhap, note;
         string gioiTinhStr, trangThaiStr;
         if (!getline(ss, id, '|')) continue;
+        if (!getline(ss, hd, '|')) continue;
         if (!getline(ss, ten, '|')) continue;
         if (!getline(ss, birth, '|')) continue;
         if (!getline(ss, soCCCD, '|')) continue;
@@ -108,7 +109,7 @@ void QuanLyTaiXe::docTaiXe() {
         if (!getline(ss, note)) note = "";
         bool gioiTinh = (gioiTinhStr == "1" || gioiTinhStr == "true" || gioiTinhStr == "Nam");
         bool trangThai = (trangThaiStr == "1" || trangThaiStr == "true" || trangThaiStr == "Ranh");
-        dsTaiXe.emplace_back(id, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGiaNhap, gioiTinh, trangThai, note);
+        dsTaiXe.emplace_back(id, hd, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGiaNhap, gioiTinh, trangThai, note);
     }
     file.close();
     rebuildTaiXeMap();
@@ -118,7 +119,8 @@ void QuanLyTaiXe::ghiTaiXe() {
     ofstream file("drivers.txt");
     for (const auto& tx : dsTaiXe) {
         file << tx.IDTX << "|"
-                << tx.tenTaiXe << "|"
+                << tx.hoDemTX << "|"
+                << tx.tenTX << "|"
                 << tx.birth << "|"
                 << tx.soCCCD << "|"
                 << tx.diaChi << "|"
@@ -142,9 +144,12 @@ void QuanLyTaiXe::themTaiXe() {
         string id = sinhIDTaiXe();
         cout << "ID Tai xe (tu dong): " << id << endl;
 
-        string ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGN, note;
+        string hd, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGN, note;
         int gioiTinhChoice, trangThaiChoice;
 
+        if(! Utils::getInputWithESC(hd, "Nhap ho dem tai xe: ")) {
+            return;
+        }
         if(! Utils::getInputWithESC(ten, "Nhap ten tai xe: ")) {
             return;
         }
@@ -190,14 +195,14 @@ void QuanLyTaiXe::themTaiXe() {
         
         cout << "Nhap ghi chu: "; getline(cin, note);
         
-        TaiXe txMoi(id, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGN, gioiTinh, trangThai, note);
+        TaiXe txMoi(id, hd, ten, birth, soCCCD, dc, sdt, soGPLX, hangGPLX, ngayGN, gioiTinh, trangThai, note);
         dsTaiXe.push_back(txMoi);
         taiXeByID[id] = &dsTaiXe.back();
         ghiTaiXe();
         
         ghiLichSuTaiXe("THEM_MOI", txMoi);
         ghiLichSuHoatDong("THEM_TAI_XE", "Tai xe ID: " + id, 
-                            "Ten: " + ten + " | GPLX: " + hangGPLX, "THANH_CONG");
+                            "Ho va Ten: " + hd + ten + " | GPLX: " + hangGPLX, "THANH_CONG");
         
         Utils::setColor(10);
         cout << "\nThem tai xe thanh cong!\n";
@@ -266,15 +271,25 @@ void QuanLyTaiXe::suaTaiXe() {
         taiXeByID[newID] = tx;
     }
     
+    // Ho dem
+    cout << "Ho dem hien tai: " << tx->hoDemTX << "\n";
+    string hd;
+    if(! Utils::getInputWithESC(hd, "Nhap ho dem moi (Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!hd.empty() && hd != tx->hoDemTX) {
+        thayDoiLog << "Ho dem: " << tx->hoDemTX << " -> " << hd << "; ";
+        tx->hoDemTX = hd;
+    }
     // Tên
-    cout << "Ten hien tai: " << tx->tenTaiXe << "\n";
+    cout << "Ten hien tai: " << tx->tenTX << "\n";
     string ten; 
     if(! Utils::getInputWithESC(ten, "Nhap ten moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!ten.empty() && ten != tx->tenTaiXe) {
-        thayDoiLog << "Ten: " << tx->tenTaiXe << " -> " << ten << "; ";
-        tx->tenTaiXe = ten;
+    if (!ten.empty() && ten != tx->tenTX) {
+        thayDoiLog << "Ten: " << tx->tenTX << " -> " << ten << "; ";
+        tx->tenTX = ten;
     }
     
     // Ngày sinh
@@ -476,7 +491,7 @@ void QuanLyTaiXe::xoaTaiXe() {
     ghiChu << "So xe bi anh huong: " << soXeBiAnhHuong;
     ghiLichSuTaiXe("XOA", txXoa, ghiChu.str());
     ghiLichSuHoatDong("XOA_TAI_XE", "Tai xe ID: " + id, 
-                        "Ten: " + txXoa.tenTaiXe + " | Xe anh huong: " + to_string(soXeBiAnhHuong), 
+                        "Ho va Ten: " + txXoa.hoDemTX + txXoa.tenTX + " | Xe anh huong: " + to_string(soXeBiAnhHuong), 
                         "THANH_CONG");
     
     Utils::setColor(10);
@@ -512,7 +527,7 @@ void QuanLyTaiXe::hienThiTaiXe() {
     for (const auto& tx : dsTaiXe) {
         cout << left 
             << setw(10) << tx.IDTX 
-            << setw(25) << tx.tenTaiXe
+            << setw(25) << tx.hoDemTX + " " + tx.tenTX
             << setw(15) << tx.birth
             << setw(18) << tx.soCCCD
             << setw(15) << tx.sdt
@@ -559,7 +574,7 @@ void QuanLyTaiXe::timTaiXe() {
             cout << "Nhap ten can tim: "; 
             getline(cin, ten); 
             for (auto& tx : dsTaiXe) 
-                if (tx.tenTaiXe.find(ten) != string::npos) 
+                if (tx.tenTX.find(ten) != string::npos) 
                     ketQua.push_back(&tx); 
             break; 
         }
@@ -630,7 +645,7 @@ void QuanLyTaiXe::timTaiXe() {
         cout << left 
             << setw(5) << stt++ 
             << setw(8) << tx->IDTX 
-            << setw(20) << tx->tenTaiXe 
+            << setw(20) << tx->hoDemTX + " " + tx->tenTX
             << setw(12) << tx->birth 
             << setw(15) << tx->soCCCD 
             << setw(12) << tx->sdt 
@@ -674,7 +689,7 @@ void QuanLyTaiXe::suaTaiXeByPointer(TaiXe* tx) {
     system("cls");
     Utils::printHeader("SUA THONG TIN TAI XE");
     cout << "Thong tin hien tai:\n";
-    cout << "ID: " << tx->IDTX << " | Ten: " << tx->tenTaiXe << endl;
+    cout << "ID: " << tx->IDTX << " | Ten: " << tx->hoDemTX << " " << tx->tenTX << endl;
     cout << string(60, '-') << endl;
     
     TaiXe txCu = *tx;
@@ -704,12 +719,20 @@ void QuanLyTaiXe::suaTaiXeByPointer(TaiXe* tx) {
         taiXeByID[newID] = tx;
     }
     
-    cout << "Ten hien tai: " << tx->tenTaiXe << "\n";
+    cout << "Ho dem hien tai: " << tx->hoDemTX << "\n";
+    cout << "Nhap ho dem moi (Enter de giu nguyen): ";
+    string hd; getline(cin, hd);
+    if (!hd.empty() && hd != tx->hoDemTX) {
+        thayDoiLog << "Ho dem: " << tx->hoDemTX << " -> " << hd << "; ";
+        tx->hoDemTX = hd;
+    }
+
+    cout << "Ten hien tai: " << tx->tenTX << "\n";
     cout << "Nhap ten moi (Enter de giu nguyen): ";
     string ten; getline(cin, ten); 
-    if (!ten.empty() && ten != tx->tenTaiXe) {
-        thayDoiLog << "Ten: " << tx->tenTaiXe << " -> " << ten << "; ";
-        tx->tenTaiXe = ten;
+    if (!ten.empty() && ten != tx->tenTX) {
+        thayDoiLog << "Ten: " << tx->tenTX << " -> " << ten << "; ";
+        tx->tenTX = ten;
     }
     
     cout << "Ngay sinh hien tai: " << tx->birth << "\n";
@@ -955,7 +978,7 @@ void QuanLyTaiXe::hienThiDanhSachDaSapXep() {
     for (const auto& tx : dsTaiXe) {
         cout << left 
             << setw(10) << tx.IDTX 
-            << setw(25) << tx.tenTaiXe
+            << setw(25) << tx.hoDemTX + " " + tx.tenTX
             << setw(15) << tx.birth
             << setw(18) << tx.soCCCD
             << setw(15) << tx.sdt

@@ -10,7 +10,8 @@ using namespace std;
 class TaiXe {
 public:
     string IDTX;
-    string tenTaiXe;
+    string hoDemTX;
+    string tenTX;
     string birth;
     string soCCCD;
     string diaChi;
@@ -23,11 +24,11 @@ public:
     string note;
 
 public:  
-    TaiXe(const string& id = "", const string& ten = "", const string& b = "", 
+    TaiXe(const string& id = "", const string& hd = "", const string& ten = "", const string& b = "", 
           const string& CCCD = "", const string& dc = "", const string& dt = "", 
           const string& gplx = "", const string& hang = "", const string& ngayGN = "", 
           bool gt = true, bool tt = true, const string& ghiChu = "")
-        : IDTX(id), tenTaiXe(ten), birth(b), soCCCD(CCCD), diaChi(dc), sdt(dt),
+        : IDTX(id), hoDemTX(hd), tenTX(ten), birth(b), soCCCD(CCCD), diaChi(dc), sdt(dt),
           soGPLX(gplx), hangGPLX(hang), ngayGiaNhap(ngayGN), gioiTinh(gt), 
           trangThaiTX(tt), note(ghiChu) {}
 

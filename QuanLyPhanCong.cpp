@@ -98,14 +98,23 @@ void QuanLyPhanCong::docPhanCong() {
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
-        string idpc, idtx, idxe, st, et, note;
+        string idpc, idtx, idxe, nLV, cLV, gV, gR, loaiPC, dHT, dT, soKm, note;
         if (!getline(ss, idpc, '|')) continue;
         if (!getline(ss, idtx, '|')) continue;
         if (!getline(ss, idxe, '|')) continue;
-        if (!getline(ss, st, '|')) continue;
-        if (!getline(ss, et, '|')) continue;
+        if (!getline(ss, nLV, '|')) continue;
+        if (!getline(ss, cLV, '|')) continue;
+        if (!getline(ss, gV, '|')) continue;
+        if (!getline(ss, gR, '|')) continue;
+        if (!getline(ss, loaiPC, '|')) continue;
+        if (!getline(ss, dHT, '|')) continue;
+        bool daHoanThanh = (dHT == "1" || dHT == "true");
+        if (!getline(ss, dT, '|')) dT = "0.0";
+        float doanhThu = stof(dT);
+        if (!getline(ss, soKm, '|')) soKm = "0.0";
+        float soKmChay = stof(soKm);
         if (!getline(ss, note)) note = "";
-        dsPhanCong.emplace_back(idpc, idtx, idxe, st, et, note);
+        dsPhanCong.emplace_back(idpc, idtx, idxe, nLV, cLV, gV, gR, loaiPC, daHoanThanh, doanhThu, soKmChay, note);
     }
     file.close();
     rebuildPhanCongMap();
@@ -114,8 +123,18 @@ void QuanLyPhanCong::docPhanCong() {
 void QuanLyPhanCong::ghiPhanCong() {
     ofstream file("phancong.txt");
     for (const auto& pc : dsPhanCong) {
-        file << pc.IDPC << "|" << pc.IDTX << "|" << pc.IDXe << "|" 
-                << pc.StartTime << "|" << pc.EndTime << "|" << pc.Note << endl;
+        file << pc.IDPC << "|" 
+             << pc.IDTX << "|" 
+             << pc.IDXe << "|"
+             << pc.ngayLamViec << "|"
+             << pc.caLamViec << "|"
+             << pc.gioVao << "|"
+             << pc.gioRa << "|"
+             << pc.loaiPhanCong << "|"
+             << (pc.daHoanThanh ? "1" : "0") << "|"
+             << fixed << setprecision(2) << pc.doanhThu << "|"
+             << fixed << setprecision(2) << pc.soKmChay << "|"
+             << pc.note << endl;
     }
     file.close();
 }
@@ -128,7 +147,7 @@ void QuanLyPhanCong::themPhanCong() {
     string idpc = sinhIDPhanCong();
     cout << "ID phan cong (tu dong): " << idpc << endl;
     
-    string idtx, idxe, nLV, cLV, gV, gR, loaiPC, st, et, note;
+    string idtx, idxe, nLV, cLV, gV, gR, loaiPC, note;
     
     if (!Utils::getInputWithESC(idtx, "Nhap ID tai xe (VD: TX001, TX012,...): ")) {
         return;
@@ -154,7 +173,7 @@ void QuanLyPhanCong::themPhanCong() {
         return;
     }
     
-    if (!Utils::getInputWithESC(nLV, "Nhap thoi gian bat dau (VD: 15/12/2025): ")) {
+    if (!Utils::getInputWithESC(nLV, "Nhap ngay lam viec (VD: 15/12/2025): ")) {
         return;
     }
 
@@ -170,14 +189,13 @@ void QuanLyPhanCong::themPhanCong() {
     if (!Utils::getInputWithESC(loaiPC, "Nhap loai phan cong (THEO_CA, THEO_THANG): ")) {
         return;
     }
-
-    
-    
+    float soKmChay = 0.0f;
+    float doanhThu = 0.0f;
     if (!Utils::getInputWithESC(note, "Nhap ghi chu: ")) {
         return;
     }
     
-    dsPhanCong.emplace_back(idpc, idtx, idxe, st, et, note);
+    dsPhanCong.emplace_back(idpc, idtx, idxe, nLV, cLV, gV, gR, loaiPC, false, 0.0f, 0.0f, note);
     phanCongByID[idpc] = &dsPhanCong.back();
     ghiPhanCong();
     
@@ -259,26 +277,72 @@ void QuanLyPhanCong::suaPhanCong() {
         pc->IDXe = idxe;
     }
     
-    cout << "Thoi gian bat dau hien tai: " << pc->StartTime << "\n";
-    string st; 
-    if (!Utils::getInputWithESC(st, "Nhap thoi gian bat dau moi (Enter de giu nguyen): ")) {
+    cout << "Ngay lam viec hien tai: " << pc->ngayLamViec << "\n";
+    string nLV; 
+    if (!Utils::getInputWithESC(nLV, "Nhap ngay lam viec moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!st.empty()) pc->StartTime = st;
-    
-    cout << "Thoi gian ket thuc hien tai: " << pc->EndTime << "\n";
-    string et; 
-    if (!Utils::getInputWithESC(et, "Nhap thoi gian ket thuc moi (Enter de giu nguyen): ")) {
+    if (!nLV.empty()) pc->ngayLamViec = nLV;
+
+    cout << "Ca lam viec hien tai: " << pc->caLamViec << "\n";
+    string cLV; 
+    if (!Utils::getInputWithESC(cLV, "Nhap ca lam viec moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!et.empty()) pc->EndTime = et;
+    if (!cLV.empty()) pc->caLamViec = cLV;
+
+    cout << "Gio vao hien tai: " << pc->gioVao << "\n";
+    string gV; 
+    if (!Utils::getInputWithESC(gV, "Nhap gio vao moi (Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!gV.empty()) pc->gioVao = gV;
+
+    cout << "Gio ra hien tai: " << pc->gioRa << "\n";
+    string gR; 
+    if (!Utils::getInputWithESC(gR, "Nhap gio ra moi (Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!gR.empty()) pc->gioRa = gR;
     
-    cout << "Ghi chu hien tai: " << pc->Note << "\n";
+    cout << "Loai phan cong hien tai: " << pc->loaiPhanCong << "\n";
+    string loaiPC; 
+    if (!Utils::getInputWithESC(loaiPC, "Nhap loai phan cong moi (Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!loaiPC.empty()) pc->loaiPhanCong = loaiPC;
+    
+    cout << "Da hoan thanh hien tai: " << (pc->daHoanThanh ? "Co" : "Chua") << "\n";
+    string daHTStr; 
+    if (!Utils::getInputWithESC(daHTStr, "Da hoan thanh (1=Co, 0=Chua, Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!daHTStr.empty()) pc->daHoanThanh = (daHTStr == "1");
+
+    cout << "Doanh thu hien tai: " << pc->doanhThu << "\n";
+    string doanhThuStr; 
+    if (!Utils::getInputWithESC(doanhThuStr, "Nhap doanh thu moi (Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!doanhThuStr.empty()) {
+        try { pc->doanhThu = stof(doanhThuStr); } catch(...) {}
+    }
+
+    cout << "So km chay hien tai: " << pc->soKmChay << "\n";
+    string soKmStr; 
+    if (!Utils::getInputWithESC(soKmStr, "Nhap so km chay moi (Enter de giu nguyen): ")) {
+        return;
+    }
+    if (!soKmStr.empty()) {
+        try { pc->soKmChay = stof(soKmStr); } catch(...) {}
+    }
+
+    cout << "Ghi chu hien tai: " << pc->note << "\n";
     string note; 
-    if (! Utils::getInputWithESC(note, "Nhap ghi chu moi (Enter de giu nguyen): ")) {
+    if (!Utils::getInputWithESC(note, "Nhap ghi chu moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!note.empty()) pc->Note = note;
+    if (!note.empty()) pc->note = note;
     
     ghiPhanCong();
     
@@ -345,19 +409,31 @@ void QuanLyPhanCong::hienThiPhanCong() {
         << setw(10) << "ID PC" 
         << setw(10) << "ID TX" 
         << setw(10) << "ID Xe" 
-        << setw(20) << "Start Time" 
-        << setw(20) << "End Time" 
-        << setw(30) << "Note" << endl;
-    cout << string(100, '-') << endl;
+        << setw(14) << "Ngay LV"
+        << setw(12) << "Ca LV"
+        << setw(10) << "Gio vao"
+        << setw(10) << "Gio ra"
+        << setw(12) << "Loai PC"
+        << setw(10) << "Hoan thanh"
+        << setw(12) << "Doanh thu"
+        << setw(10) << "So Km"
+        << setw(20) << "Ghi chu" << endl;
+    cout << string(130, '-') << endl;
     
     for (const auto& pc : dsPhanCong) {
         cout << left 
             << setw(10) << pc.IDPC 
             << setw(10) << pc.IDTX 
             << setw(10) << pc.IDXe 
-            << setw(20) << pc.StartTime 
-            << setw(20) << pc.EndTime 
-            << setw(30) << pc.Note << endl;
+            << setw(14) << pc.ngayLamViec
+            << setw(12) << pc.caLamViec
+            << setw(10) << pc.gioVao
+            << setw(10) << pc.gioRa
+            << setw(12) << pc.loaiPhanCong
+            << setw(10) << (pc.daHoanThanh ? "Co" : "Chua")
+            << setw(12) << fixed << setprecision(2) << pc.doanhThu
+            << setw(10) << fixed << setprecision(2) << pc.soKmChay
+            << setw(20) << pc.note << endl;
     }
     
     cout << "\nTong so phan cong: " << dsPhanCong.size() << endl;
@@ -434,19 +510,31 @@ void QuanLyPhanCong::timPhanCong() {
         << setw(10) << "ID PC" 
         << setw(10) << "ID TX" 
         << setw(10) << "ID Xe" 
-        << setw(20) << "Start Time" 
-        << setw(20) << "End Time" 
-        << setw(30) << "Note" << endl;
-    cout << string(100, '-') << endl;
+        << setw(14) << "Ngay LV"
+        << setw(12) << "Ca LV"
+        << setw(10) << "Gio vao"
+        << setw(10) << "Gio ra"
+        << setw(12) << "Loai PC"
+        << setw(10) << "Hoan thanh"
+        << setw(12) << "Doanh thu"
+        << setw(10) << "So Km"
+        << setw(20) << "Ghi chu" << endl;
+    cout << string(130, '-') << endl;
     
     for (const auto& pc : ketQua) {
         cout << left 
             << setw(10) << pc->IDPC 
             << setw(10) << pc->IDTX 
             << setw(10) << pc->IDXe 
-            << setw(20) << pc->StartTime 
-            << setw(20) << pc->EndTime 
-            << setw(30) << pc->Note << endl;
+            << setw(14) << pc->ngayLamViec
+            << setw(12) << pc->caLamViec
+            << setw(10) << pc->gioVao
+            << setw(10) << pc->gioRa
+            << setw(12) << pc->loaiPhanCong
+            << setw(10) << (pc->daHoanThanh ? "Co" : "Chua")
+            << setw(12) << fixed << setprecision(2) << pc->doanhThu
+            << setw(10) << fixed << setprecision(2) << pc->soKmChay
+            << setw(20) << pc->note << endl;
     }
     
     cout << "\nTim thay " << ketQua.size() << " phan cong.\n";
@@ -543,7 +631,7 @@ void QuanLyPhanCong::hienThiDanhSachPhanCongDaSapXep() {
         << setw(12) << "ID PC"
         << setw(10) << "ID TX"
         << setw(10) << "ID Xe"
-        << setw(20) << "Ngay phan cong"
+        << setw(20) << "Ngay lam viec"
         << setw(15) << "Ca lam viec" << endl;
     cout << string(67, '-') << endl;
     
@@ -552,10 +640,10 @@ void QuanLyPhanCong::hienThiDanhSachPhanCongDaSapXep() {
             << setw(12) << pc. IDPC
             << setw(10) << pc.IDTX
             << setw(10) << pc.IDXe
-            << setw(20) << pc.ngayPhanCong
+            << setw(20) << pc.ngayLamViec
             << setw(15) << pc.caLamViec << endl;
     }
     
-    cout << "\nTong so phan cong: " << dsPhanCong. size() << endl;
+    cout << "\nTong so phan cong: " << dsPhanCong.size() << endl;
     Utils::pause();
 }
