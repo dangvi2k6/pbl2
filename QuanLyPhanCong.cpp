@@ -33,6 +33,48 @@ void QuanLyPhanCong::rebuildPhanCongMap() {
     }
 }
 
+void QuanLyPhanCong::ghiLichSuPhanCong(const string& hanhDong, const PhanCong& pc, const string& ghiChu) {
+    ofstream file("phancong_history.log", ios::app);
+    if (!file.is_open()) return;
+    
+    file << "=== LICH SU PHAN CONG ===\n";
+    file << "Thoi gian: " << Utils::layThoiGianHienTai() << "\n";
+    file << "Nguoi thuc hien: " << currentAdmin << "\n";
+    file << "Hanh dong: " << hanhDong << "\n";
+    file << "--- Thong tin phan cong ---\n";
+    file << "ID Phan Cong: " << pc.IDPC << "\n";
+    file << "ID Tai Xe: " << pc.IDTX << "\n";
+    file << "ID Xe: " << pc.IDXe << "\n";
+    file << "Ngay lam viec: " << pc.ngayLamViec << "\n";
+    file << "Ca lam viec: " << pc.caLamViec << "\n";
+    file << "Gio vao: " << pc.gioVao << "\n";
+    file << "Gio ra: " << pc.gioRa << "\n";
+    file << "Loai phan cong: " << pc.loaiPhanCong << "\n";
+    file << "Da hoan thanh: " << (pc.daHoanThanh ? "Co" : "Chua") << "\n";
+    file << "Doanh thu: " << fixed << setprecision(2) << pc.doanhThu << "\n";
+    file << "So Km chay: " << fixed << setprecision(2) << pc.soKmChay << "\n";
+    if (!ghiChu.empty()) {
+        file << "Ghi chu them: " << ghiChu << "\n";
+    }
+    file << string(60, '-') << "\n\n";
+    file.close();
+}
+
+void QuanLyPhanCong::ghiLichSuHoatDong(const string& loaiHoatDong, const string& doiTuong, 
+                        const string& chiTiet, const string& trangThai) {
+    ofstream file("activity_history.log", ios::app);
+    if (!file.is_open()) return;
+    
+    file << "==========================================\n";
+    file << "Thoi gian: " << Utils::layThoiGianHienTai() << "\n";
+    file << "Nguoi thuc hien: " << currentAdmin << "\n";
+    file << "Loai hoat dong: " << loaiHoatDong << "\n";
+    file << "Doi tuong: " << doiTuong << "\n";
+    file << "Chi tiet: " << chiTiet << "\n";
+    file << "Trang thai: " << trangThai << "\n";
+    file << "==========================================\n\n";
+    file.close();
+}
 void QuanLyPhanCong::setCurrentAdmin(const string& admin) {
     currentAdmin = admin;
 }
@@ -86,7 +128,7 @@ void QuanLyPhanCong::themPhanCong() {
     string idpc = sinhIDPhanCong();
     cout << "ID phan cong (tu dong): " << idpc << endl;
     
-    string idtx, idxe, st, et, note;
+    string idtx, idxe, nLV, cLV, gV, gR, loaiPC, st, et, note;
     
     if (!Utils::getInputWithESC(idtx, "Nhap ID tai xe (VD: TX001, TX012,...): ")) {
         return;
@@ -112,13 +154,24 @@ void QuanLyPhanCong::themPhanCong() {
         return;
     }
     
-    if (! Utils::getInputWithESC(st, "Nhap thoi gian bat dau (dd/mm/yyyy HH:MM): ")) {
+    if (!Utils::getInputWithESC(nLV, "Nhap thoi gian bat dau (VD: 15/12/2025): ")) {
         return;
     }
+
+    if (!Utils::getInputWithESC(cLV, "Nhap ca lam viec (CA_SANG, CA_CHIEU, CA_DEM, THEO_THANG, LINH HOAT): ")) {
+        return;
+    }
+    if (!Utils::getInputWithESC(gV, "Nhap gio vao (VD: 06:00): ")) {
+        return;
+    }
+    if (!Utils::getInputWithESC(gR, "Nhap gio ra (VD: 14:00): ")) {
+        return;
+    }
+    if (!Utils::getInputWithESC(loaiPC, "Nhap loai phan cong (THEO_CA, THEO_THANG): ")) {
+        return;
+    }
+
     
-    if (!Utils::getInputWithESC(et, "Nhap thoi gian ket thuc (dd/mm/yyyy HH:MM): ")) {
-        return;
-    }
     
     if (!Utils::getInputWithESC(note, "Nhap ghi chu: ")) {
         return;
