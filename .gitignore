@@ -9,3 +9,4 @@ main.exe
 *.swp
 *.swo
 *~
+_codeql*
