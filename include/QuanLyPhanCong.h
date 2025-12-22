@@ -22,6 +22,7 @@ private:
     string currentAdmin;
     unordered_map<string, TaiXe*>* pTaiXeByID;
     unordered_map<string, TaXi*>* pTaxiByID;
+    MyVector<TaXi>* pDsTaxi;
 
     string sinhIDPhanCong();
     void rebuildPhanCongMap();
@@ -32,7 +33,8 @@ private:
 public:
     QuanLyPhanCong(const string&,
                    unordered_map<string, TaiXe*>* = nullptr,
-                   unordered_map<string, TaXi*>* = nullptr);
+                   unordered_map<string, TaXi*>* = nullptr,
+                   MyVector<TaXi>* = nullptr);
     ~QuanLyPhanCong();
 
     void setCurrentAdmin(const string&);
@@ -50,7 +52,7 @@ public:
 
     void sapXepPhanCong();
     void hienThiDanhSachPhanCongDaSapXep();
-    
+    void setDsTaxi(MyVector<TaXi>* dsTaxi) { pDsTaxi=dsTaxi; }
 };
 
 #endif

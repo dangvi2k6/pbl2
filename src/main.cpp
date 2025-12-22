@@ -419,6 +419,7 @@ int main() {
             qlChuyenXe.setTaxiByID(&qlTaxi.getTaxiByID());
             qlPhanCong.setTaiXeByID(&qlTaiXe.getTaiXeByID());
             qlPhanCong.setTaxiByID(&qlTaxi.getTaxiByID());
+            qlPhanCong.setDsTaxi(&qlTaxi.getDSTaxi());
             qlGanXe.setTaiXeByID(&qlTaiXe.getTaiXeByID());
             qlGanXe.setTaxiByID(&qlTaxi.getTaxiByID());
             qlGanXe.setDsTaxi(&qlTaxi.getDSTaxi());

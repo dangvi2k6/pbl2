@@ -15,9 +15,9 @@ public:
     string IDTX;
     string IDXe;
     string ngayLamViec;     // "15/12/2025" - CHỈ 1 NGÀY (ưu tiên)
-    string caLamViec;       // "CA_SANG", "CA_CHIEU", "CA_DEM", "THEO_THANG", "LINH HOAT"
-    string gioVao;          // "06:00" hoặc "01/12/2025 00:00"
-    string gioRa;           // "14:00" hoặc "31/12/2025 23:59"
+    string caLamViec;       // "CA_SANG", "CA_CHIEU", "CA_DEM", "TAT_CA"
+    string gioVao;          // "06:00" 
+    string gioRa;           // "14:00" 
     string loaiPhanCong;    // "THEO_CA" hoặc "THEO_THANG"
     bool daHoanThanh;
     float doanhThu;

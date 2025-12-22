@@ -1,0 +1,20 @@
+=== Lich su gan tai xe cho xe ===
+Ma ghi nhan: GAN20251222_0001
+Thoi gian: 2025-12-22 17:10:54
+Nguoi thuc hien: vi
+Loai thao tac: GAN
+Tai xe: TX001 - Nguyen VanAn (GPLX: B2)
+Xe: XE001 - 51H-12345 (Toyota, 4 cho)
+Trang thai: Da gan tai xe cho xe
+------------------------------------------------------------
+
+=== Lich su gan tai xe cho xe ===
+Ma ghi nhan: GAN20251222_0002
+Thoi gian: 2025-12-22 17:11:13
+Nguoi thuc hien: vi
+Loai thao tac: GAN
+Tai xe: TX001 - Nguyen VanAn (GPLX: B2)
+Xe: XE003 - 51H-34567 (Toyota, 4 cho)
+Trang thai: Da gan tai xe cho xe
+------------------------------------------------------------
+

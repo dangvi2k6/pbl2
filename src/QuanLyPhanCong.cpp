@@ -3,8 +3,9 @@
 
 QuanLyPhanCong::QuanLyPhanCong(const string& admin,
                 unordered_map<string, TaiXe*>* taiXeByID,
-                unordered_map<string, TaXi*>* taxiByID)
-    : currentAdmin(admin), pTaiXeByID(taiXeByID), pTaxiByID(taxiByID) {
+                unordered_map<string, TaXi*>* taxiByID,
+                MyVector<TaXi>* dsTaxi)
+    : currentAdmin(admin), pTaiXeByID(taiXeByID), pTaxiByID(taxiByID), pDsTaxi(dsTaxi) {
     docPhanCong();
 }
 
@@ -160,16 +161,60 @@ void QuanLyPhanCong::themPhanCong() {
         Utils::pause(); 
         return;
     }
+
+    //Hien thi danh sach tai xe
+    MyVector<string> dsXeCuaTaiXe; // Danh sách xe mà tài xế này được gán
+        
+    if (pTaxiByID && pDsTaxi) {
+        cout << "\n=== DANH SACH XE CUA TAI XE " << idtx << " ===\n";
+        bool coXe = false;
+        int stt = 1;
+        
+        for (const auto& taxi :  *pDsTaxi) {
+            // Kiểm tra xem tài xế có trong danh sách tài xế của xe này không
+            auto& dsTX = taxi. dsTaiXe;
+            if (find(dsTX.begin(), dsTX.end(), idtx) != dsTX.end()) {
+                coXe = true;
+                dsXeCuaTaiXe. push_back(taxi.IDXe);
+                cout << "  " << stt++ << ". ID:  " << taxi.IDXe 
+                        << " | Bien so:  " << taxi.bienSo
+                        << " | Hang:  " << taxi.hangXe 
+                        << " | Suc chua: " << taxi.sucChua << " cho"
+                        << " | Trang thai: " << (taxi.trangThaiXe ? "Hoat dong" : "Bao tri")
+                        << endl;
+            }
+        }
+        
+        if (!coXe) {
+            Utils::setColor(12);
+            cout << "  (Tai xe nay chua duoc gan cho xe nao! )\n";
+            Utils::setColor(7);
+            Utils:: pause();
+            return;
+        }
+        cout << string(70, '-') << endl;
+    }
     
     if (!Utils::getInputWithESC(idxe, "Nhap ID xe (VD: XE001, XE012,...): ")) {
         return;
     }
     
+    //Kiem tra xe co ton tai ko
     if (pTaxiByID && pTaxiByID->find(idxe) == pTaxiByID->end()) {
         Utils::setColor(12); 
         cout << "Xe khong ton tai!\n"; 
         Utils::setColor(7); 
         Utils::pause(); 
+        return;
+    }
+
+    //Kiem tra xe co trong danh sach cua tai xe khong
+    if (find(dsXeCuaTaiXe.begin(), dsXeCuaTaiXe.end(), idxe) == dsXeCuaTaiXe.end()) {
+        Utils::setColor(12);
+        cout << "Xe " << idxe << " khong nam trong danh sach xe cua tai xe " << idtx << "!\n";
+        cout << "Vui long chon xe trong danh sach tren.\n";
+        Utils::setColor(7);
+        Utils::pause();
         return;
     }
     
