@@ -42,7 +42,7 @@ void QuanLyGanXe::ghiLichSuChiTiet(const string& maGhiNhan, const string& loaiTh
     file << "Thoi gian: " << Utils::layThoiGianHienTai() << "\n";
     file << "Nguoi thuc hien: " << currentAdmin << "\n";
     file << "Loai thao tac: " << loaiThaoTac << "\n";
-    file << "Tai xe: " << idTaiXe << " - " << hoDemTX << tenTX << " (GPLX: " << gplxTaiXe << ")\n";
+    file << "Tai xe: " << idTaiXe << " - " << hoDemTX << " "<< tenTX << " (GPLX: " << gplxTaiXe << ")\n";
     file << "Xe: " << idXe << " - " << bienSo << " (" << loaiXe << ", " << sucChua << " cho)\n";
     file << "Trang thai: " << trangThai << "\n";
     if (!ghiChu.empty()) {
@@ -182,7 +182,7 @@ void QuanLyGanXe::ganTaiXeChoXe() {
     // Ghi lịch sử chi tiết và log
     string ma = taoMaGhiNhan();
     ghiLichSuChiTiet(ma, "GAN", idTX, tx->hoDemTX, tx->tenTX, tx->hangGPLX, xe->IDXe, xe->bienSo, xe->hangXe, xe->sucChua, "Da gan tai xe cho xe");
-    ghiLog("GAN_THANH_CONG", "Da gan tai xe " + idTX + " (" + tx->hoDemTX + tx->tenTX + ") cho xe " + idXe);
+    ghiLog("GAN_THANH_CONG", "Da gan tai xe " + idTX + " (" + tx->hoDemTX + " " + tx->tenTX + ") cho xe " + idXe);
 
     Utils::setColor(10);
     cout << "Gan tai xe thanh cong!\n";
@@ -243,7 +243,25 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
     if(! Utils::getInputWithESC(sttStr, "Nhap STT tai xe muon huy gan: ")) {
         return;
     }
-    stt= stoi(sttStr);
+    
+    // Xử lý exception khi chuyển đổi string sang int
+    try {
+        stt = stoi(sttStr);
+    } catch (const std:: invalid_argument&) {
+        // Người dùng nhập ký tự không phải số
+        Utils::setColor(12); 
+        cout << "Loi: Ban phai nhap mot so nguyen hop le!\n"; 
+        Utils::setColor(7); 
+        Utils::pause(); 
+        return;
+    } catch (const std::out_of_range&) {
+        // Số quá lớn
+        Utils::setColor(12); 
+        cout << "Loi: So ban nhap qua lon!\n"; 
+        Utils:: setColor(7); 
+        Utils::pause(); 
+        return;
+    }
     
     if (stt < 1 || stt > (int)xe->dsTaiXe.size()) {
         Utils::setColor(12); 
@@ -271,7 +289,7 @@ void QuanLyGanXe::huyGanTaiXeChoXe() {
 
     string ma = taoMaGhiNhan();
     ghiLichSuChiTiet(ma, "HUY_GAN", idTX, hd, ten, gplx, xe->IDXe, xe->bienSo, xe->hangXe, xe->sucChua, "Da huy gan tai xe");
-    ghiLog("HUY_GAN", "Da huy gan tai xe " + idTX + " (" + hd + ten + ") khoi xe " + idXe);
+    ghiLog("HUY_GAN", "Da huy gan tai xe " + idTX + " (" + hd + " " + ten + ") khoi xe " + idXe);
 
     Utils::setColor(10); 
     cout << "Huy gan thanh cong!\n"; 

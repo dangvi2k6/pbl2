@@ -1,5 +1,6 @@
 #include "QuanLyPhanCong.h"
 #include "Utils_Sort.h"
+#include <limits>
 
 QuanLyPhanCong::QuanLyPhanCong(const string& admin,
                 unordered_map<string, TaiXe*>* taiXeByID,
@@ -369,7 +370,6 @@ void QuanLyPhanCong::suaPhanCong() {
     cout<<"(ESC de quay lai)"<<endl;
 
     string id;
-    cout << "Nhap ID phan cong can sua (VD: PC001, PC002,...): "; 
     if (!Utils::getInputWithESC(id, "Nhap ID phan cong can sua (VD: PC001, PC002,...): ")) {
         return;
     }
@@ -719,15 +719,28 @@ void QuanLyPhanCong::timPhanCong() {
     cout << "Lua chon: ";
     
     int choice; 
-    cin >> choice; 
-    cin.ignore();
+
+    // Kiểm tra input hợp lệ
+    if (!(cin >> choice)) {
+        // Nếu input không phải số, clear error flag và buffer
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>:: max(), '\n');
+        Utils::setColor(12);
+        cout << "Lua chon khong hop le!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
+    
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear buffer sau khi đọc choice
+    
     
     MyVector<PhanCong*> ketQua;
     
     switch(choice) {
         case 1: { 
             string id; 
-            cout << "Nhap ID phan cong can tim (VD: PC0001, PC0002,...): "; 
+            cout << "Nhap ID phan cong can tim (VD: PC001, PC002,...): "; 
             getline(cin, id); 
             for (auto& pc : dsPhanCong) 
                 if (pc.IDPC.find(id) != string::npos) 

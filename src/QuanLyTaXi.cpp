@@ -1,5 +1,6 @@
 #include "QuanLyTaXi.h"
 #include "Utils_Sort.h"
+#include <limits>
 
 QuanLyTaXi::QuanLyTaXi(const string& admin, unordered_map<string, TaiXe*>* taiXeByID) 
     : currentAdmin(admin), pTaiXeByID(taiXeByID) {
@@ -212,12 +213,47 @@ void QuanLyTaXi::themTaxi() {
         if(! Utils::getInputWithESC(sucChuaStr, "Nhap suc chua (so cho ngoi): ")) {
             return;
         }
-        sucChua = stoi(sucChuaStr);
+
+        try {
+            sucChua = stoi(sucChuaStr);
+        } catch (const std:: invalid_argument&) {
+            // Người dùng nhập ký tự không phải số
+            Utils::setColor(12); 
+            cout << "Loi: Ban phai nhap mot so nguyen hop le!\n"; 
+            Utils::setColor(7); 
+            Utils::pause(); 
+            return;
+        } catch (const std::out_of_range&) {
+            // Số quá lớn
+            Utils::setColor(12); 
+            cout << "Loi: So ban nhap qua lon!\n"; 
+            Utils:: setColor(7); 
+            Utils::pause(); 
+            return;
+        }
+
         string trangThaiStr;
         if(! Utils::getInputWithESC(trangThaiStr, "Trang thai xe (1=Hoat dong, 0=Bao tri): ")) {
             return;
         }
-        trangThaiChoice = stoi(trangThaiStr);
+
+        try {
+            trangThaiChoice = stoi(trangThaiStr);
+        } catch (const std:: invalid_argument&) {
+            // Người dùng nhập ký tự không phải số
+            Utils::setColor(12); 
+            cout << "Loi: Ban phai nhap mot so nguyen hop le!\n"; 
+            Utils::setColor(7); 
+            Utils::pause(); 
+            return;
+        } catch (const std::out_of_range&) {
+            // Số quá lớn
+            Utils::setColor(12); 
+            cout << "Loi: So ban nhap qua lon!\n"; 
+            Utils:: setColor(7); 
+            Utils::pause(); 
+            return;
+        }
         
         bool trangThai = (trangThaiChoice == 1);
         
@@ -550,8 +586,18 @@ void QuanLyTaXi::timTaxi() {
     cout << "Lua chon: ";
     
     int choice; 
-    cin >> choice; 
-    cin.ignore();
+    
+    // Kiểm tra input hợp lệ
+    if (!(cin >> choice)) {
+        // Nếu input không phải số, clear error flag và buffer
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>:: max(), '\n');
+        Utils::setColor(12);
+        cout << "Lua chon khong hop le!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
     
     MyVector<TaXi*> ketQua;
     

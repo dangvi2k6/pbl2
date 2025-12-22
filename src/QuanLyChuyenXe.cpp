@@ -1,5 +1,6 @@
 #include "QuanLyChuyenXe.h"
 #include "Utils_Sort.h"
+#include <limits>
 
 QuanLyChuyenXe::QuanLyChuyenXe(const string& admin, 
                 unordered_map<string, TaiXe*>* taiXeByID,
@@ -535,8 +536,18 @@ void QuanLyChuyenXe::timChuyenXe() {
     cout << "Lua chon: ";
     
     int choice;
-    cin >> choice;
-    cin.ignore();
+    
+    // Kiểm tra input hợp lệ
+    if (!(cin >> choice)) {
+        // Nếu input không phải số, clear error flag và buffer
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>:: max(), '\n');
+        Utils::setColor(12);
+        cout << "Lua chon khong hop le!\n";
+        Utils::setColor(7);
+        Utils::pause();
+        return;
+    }
     
     MyVector<ChuyenXe*> ketQua;
     
