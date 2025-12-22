@@ -30,6 +30,16 @@ private:
     void ghiLichSuHoatDong(const string&, const string&,
                             const string&, const string& = "THANH_CONG");
 
+    //Cac ham kiem tra trung lich
+    int timeToMinutes(const string& time);
+    bool kiemTraKhoangThoiGianTrung(int gioVao1, int gioRa1, int gioVao2, int gioRa2);
+    bool kiemTraTrungLichTaiXe(const string& idtx, const string& ngay, 
+                               const string& gioVao, const string& gioRa, 
+                               const string& idpcBoQua = "");
+    bool kiemTraTrungLichXe(const string& idxe, const string& ngay, 
+                            const string& gioVao, const string& gioRa, 
+                            const string& idpcBoQua = "");
+
 public:
     QuanLyPhanCong(const string&,
                    unordered_map<string, TaiXe*>* = nullptr,

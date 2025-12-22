@@ -12,6 +12,94 @@ QuanLyPhanCong::QuanLyPhanCong(const string& admin,
 QuanLyPhanCong::~QuanLyPhanCong() {
 }
 
+int QuanLyPhanCong::timeToMinutes(const string& time) {
+    if (time.length() < 5) return -1;
+    try {
+        int hours = stoi(time.substr(0, 2));
+        int minutes = stoi(time.substr(3, 2));
+        return hours * 60 + minutes;
+    } catch(... ) {
+        return -1;
+    }
+}
+
+// ===== KIỂM TRA HAI KHOẢNG THỜI GIAN CÓ GIAO NHAU KHÔNG =====
+bool QuanLyPhanCong::kiemTraKhoangThoiGianTrung(int gioVao1, int gioRa1, int gioVao2, int gioRa2) {
+    return !(gioRa2 <= gioVao1 || gioVao2 >= gioRa1);
+}
+
+// ===== KIỂM TRA TRÙNG LỊCH TÀI XẾ =====
+bool QuanLyPhanCong::kiemTraTrungLichTaiXe(const string& idtx, const string& ngay, 
+                                           const string& gioVao, const string& gioRa, 
+                                           const string& idpcBoQua) {
+    int gioVaoMoi = timeToMinutes(gioVao);
+    int gioRaMoi = timeToMinutes(gioRa);
+    
+    if (gioVaoMoi == -1 || gioRaMoi == -1) return false;
+    
+    for (const auto& pc : dsPhanCong) {
+        // Bỏ qua phân công hiện tại (dùng khi sửa)
+        if (! idpcBoQua.empty() && pc. IDPC == idpcBoQua) {
+            continue;
+        }
+        
+        // Kiểm tra cùng tài xế và cùng ngày
+        if (pc.IDTX == idtx && pc.ngayLamViec == ngay) {
+            int gioVaoCu = timeToMinutes(pc.gioVao);
+            int gioRaCu = timeToMinutes(pc.gioRa);
+            
+            if (gioVaoCu == -1 || gioRaCu == -1) continue;
+            
+            // Kiểm tra khoảng thời gian có giao nhau không
+            if (kiemTraKhoangThoiGianTrung(gioVaoCu, gioRaCu, gioVaoMoi, gioRaMoi)) {
+                Utils:: setColor(14);
+                cout << "\n=== CANH BAO TRUNG LICH TAI XE ===\n";
+                cout << "Tai xe " << idtx << " da duoc phan cong vao ngay " << ngay << "\n";
+                cout << "Tu " << pc.gioVao << " den " << pc.gioRa << " (ID: " << pc.IDPC << ")\n";
+                Utils::setColor(7);
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+// ===== KIỂM TRA TRÙNG LỊCH XE =====
+bool QuanLyPhanCong::kiemTraTrungLichXe(const string& idxe, const string& ngay, 
+                                        const string& gioVao, const string& gioRa, 
+                                        const string& idpcBoQua) {
+    int gioVaoMoi = timeToMinutes(gioVao);
+    int gioRaMoi = timeToMinutes(gioRa);
+    
+    if (gioVaoMoi == -1 || gioRaMoi == -1) return false;
+    
+    for (const auto& pc : dsPhanCong) {
+        if (!idpcBoQua.empty() && pc.IDPC == idpcBoQua) {
+            continue;
+        }
+        
+        if (pc.IDXe == idxe && pc. ngayLamViec == ngay) {
+            int gioVaoCu = timeToMinutes(pc.gioVao);
+            int gioRaCu = timeToMinutes(pc.gioRa);
+            
+            if (gioVaoCu == -1 || gioRaCu == -1) continue;
+            
+            if (kiemTraKhoangThoiGianTrung(gioVaoCu, gioRaCu, gioVaoMoi, gioRaMoi)) {
+                Utils::setColor(14);
+                cout << "\n=== CANH BAO TRUNG LICH XE ===\n";
+                cout << "Xe " << idxe << " da duoc phan cong vao ngay " << ngay << "\n";
+                cout << "Tu " << pc.gioVao << " den " << pc.gioRa << " (ID:  " << pc.IDPC << ")\n";
+                Utils:: setColor(7);
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+
 string QuanLyPhanCong::sinhIDPhanCong() {
     int maxID = 0;
     for (const auto& pc : dsPhanCong) {
@@ -23,7 +111,7 @@ string QuanLyPhanCong::sinhIDPhanCong() {
         }
     }
     char buffer[10];
-    sprintf(buffer, "PC%04d", maxID + 1);
+    sprintf(buffer, "PC%03d", maxID + 1);
     return string(buffer);
 }
 
@@ -36,7 +124,9 @@ void QuanLyPhanCong::rebuildPhanCongMap() {
 
 void QuanLyPhanCong::ghiLichSuPhanCong(const string& hanhDong, const PhanCong& pc, const string& ghiChu) {
     ofstream file("data/phancong_history.log", ios::app);
-    if (!file.is_open()) return;
+    if (!file.is_open()){
+        return;
+    }
     
     file << "=== LICH SU PHAN CONG ===\n";
     file << "Thoi gian: " << Utils::layThoiGianHienTai() << "\n";
@@ -217,12 +307,10 @@ void QuanLyPhanCong::themPhanCong() {
         Utils::pause();
         return;
     }
-    
     if (!Utils::getInputWithESC(nLV, "Nhap ngay lam viec (VD: 15/12/2025): ")) {
         return;
     }
-
-    if (!Utils::getInputWithESC(cLV, "Nhap ca lam viec (CA_SANG, CA_CHIEU, CA_DEM, THEO_THANG, LINH HOAT): ")) {
+    if (!Utils::getInputWithESC(cLV, "Nhap ca lam viec (CA_SANG, CA_CHIEU, CA_DEM, TAT_CA): ")) {
         return;
     }
     if (!Utils::getInputWithESC(gV, "Nhap gio vao (VD: 06:00): ")) {
@@ -231,18 +319,43 @@ void QuanLyPhanCong::themPhanCong() {
     if (!Utils::getInputWithESC(gR, "Nhap gio ra (VD: 14:00): ")) {
         return;
     }
+
+    bool trungLichTaiXe = kiemTraTrungLichTaiXe(idtx, nLV, gV, gR);
+    bool trungLichXe = kiemTraTrungLichXe(idxe, nLV, gV, gR);
+    
+    if (trungLichTaiXe || trungLichXe) {
+        cout << "\nBan co muon tiep tuc them phan cong?  (Y/N): ";
+        char confirm;
+        cin >> confirm;
+        cin.ignore();
+        
+        if (confirm != 'Y' && confirm != 'y') {
+            Utils::setColor(14);
+            cout << "Da huy them phan cong!\n";
+            Utils::setColor(7);
+            Utils::pause();
+            return;
+        }
+    }
+
     if (!Utils::getInputWithESC(loaiPC, "Nhap loai phan cong (THEO_CA, THEO_THANG): ")) {
         return;
     }
-    float soKmChay = 0.0f;
-    float doanhThu = 0.0f;
+
     if (!Utils::getInputWithESC(note, "Nhap ghi chu: ")) {
         return;
     }
-    
-    dsPhanCong.emplace_back(idpc, idtx, idxe, nLV, cLV, gV, gR, loaiPC, false, 0.0f, 0.0f, note);
+
+    PhanCong pcMoi(idpc, idtx, idxe, nLV, cLV, gV, gR, loaiPC, false, 0.0f, 0.0f, note);
+    dsPhanCong.emplace_back(pcMoi);
     phanCongByID[idpc] = &dsPhanCong.back();
     ghiPhanCong();
+
+    //ghi log
+    ghiLichSuPhanCong("THEM_PHAN_CONG", pcMoi, "Them phan cong moi thanh cong");
+    ghiLichSuHoatDong("THEM_PHAN_CONG", idpc, 
+                      "Tai xe: " + idtx + ", Xe: " + idxe + ", Ngay:  " + nLV, 
+                      "THANH_CONG");
     
     Utils::setColor(10); 
     cout << "\nThem phan cong thanh cong!\n"; 
@@ -256,8 +369,8 @@ void QuanLyPhanCong::suaPhanCong() {
     cout<<"(ESC de quay lai)"<<endl;
 
     string id;
-    cout << "Nhap ID phan cong can sua (VD: PC0001, PC0002,...): "; 
-    if (!Utils::getInputWithESC(id, "Nhap ID phan cong can sua (VD: PC0001, PC0002,...): ")) {
+    cout << "Nhap ID phan cong can sua (VD: PC001, PC002,...): "; 
+    if (!Utils::getInputWithESC(id, "Nhap ID phan cong can sua (VD: PC001, PC002,...): ")) {
         return;
     }
     
@@ -271,6 +384,13 @@ void QuanLyPhanCong::suaPhanCong() {
     }
     
     PhanCong* pc = it->second;
+
+    // Lưu giá trị cũ để kiểm tra
+    string idtxCu = pc->IDTX;
+    string idxeCu = pc->IDXe;
+    string ngayCu = pc->ngayLamViec;
+    string gioVaoCu = pc->gioVao;
+    string gioRaCu = pc->gioRa;
     
     cout << "ID hien tai: " << pc->IDPC << "\n";
     string newID; 
@@ -295,6 +415,8 @@ void QuanLyPhanCong::suaPhanCong() {
     if (!Utils::getInputWithESC(idtx, "Nhap ID tai xe moi (Enter de giu nguyen): ")) {
         return;
     }
+    MyVector<string> dsXeCuaTaiXeMoi;
+
     if (!idtx.empty()) {
         if (pTaiXeByID && pTaiXeByID->find(idtx) == pTaiXeByID->end()) { 
             Utils::setColor(12); 
@@ -303,7 +425,48 @@ void QuanLyPhanCong::suaPhanCong() {
             Utils::pause(); 
             return; 
         }
+        if (pTaxiByID && pDsTaxi) {
+            cout << "\n=== DANH SACH XE CUA TAI XE " << idtx << " ===\n";
+            bool coXe = false;
+            int stt = 1;
+            
+            for (const auto& taxi : *pDsTaxi) {
+                auto& dsTX = taxi. dsTaiXe;
+                if (find(dsTX.begin(), dsTX.end(), idtx) != dsTX.end()) {
+                    coXe = true;
+                    dsXeCuaTaiXeMoi.push_back(taxi.IDXe);
+                    cout << "  " << stt++ << ". ID: " << taxi.IDXe 
+                         << " | Bien so: " << taxi.bienSo
+                         << " | Hang:  " << taxi.hangXe 
+                         << " | Suc chua: " << taxi.sucChua << " cho"
+                         << " | Trang thai: " << (taxi.trangThaiXe ? "Hoat dong" : "Bao tri")
+                         << endl;
+                }
+            }
+            
+            if (!coXe) {
+                Utils::setColor(12);
+                cout << "  (Tai xe nay chua duoc gan cho xe nao! )\n";
+                Utils::setColor(7);
+                Utils:: pause();
+                return;
+            }
+            cout << string(70, '-') << endl;
+        }
+
         pc->IDTX = idtx;
+    }
+    else {
+        idtx = pc->IDTX; // Giữ nguyên nếu không thay đổi
+
+        if (pTaxiByID && pDsTaxi) {
+            for (const auto& taxi : *pDsTaxi) {
+                auto& dsTX = taxi. dsTaiXe;
+                if (find(dsTX. begin(), dsTX.end(), idtx) != dsTX.end()) {
+                    dsXeCuaTaiXeMoi.push_back(taxi.IDXe);
+                }
+            }
+        }
     }
     
     cout << "ID xe hien tai: " << pc->IDXe << "\n";
@@ -319,7 +482,21 @@ void QuanLyPhanCong::suaPhanCong() {
             Utils::pause(); 
             return; 
         }
+
+        if (! dsXeCuaTaiXeMoi.empty()) {
+            if (find(dsXeCuaTaiXeMoi.begin(), dsXeCuaTaiXeMoi.end(), idxe) == dsXeCuaTaiXeMoi.end()) {
+                Utils::setColor(12);
+                cout << "Xe " << idxe << " khong nam trong danh sach xe cua tai xe " << idtx << "!\n";
+                cout << "Vui long chon xe trong danh sach tren.\n";
+                Utils::setColor(7);
+                Utils::pause();
+                return;
+            }
+        }
+
         pc->IDXe = idxe;
+    } else {
+        idxe = pc->IDXe; // Giữ nguyên nếu không thay đổi
     }
     
     cout << "Ngay lam viec hien tai: " << pc->ngayLamViec << "\n";
@@ -327,7 +504,11 @@ void QuanLyPhanCong::suaPhanCong() {
     if (!Utils::getInputWithESC(nLV, "Nhap ngay lam viec moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!nLV.empty()) pc->ngayLamViec = nLV;
+    if (!nLV.empty()) {
+        pc->ngayLamViec = nLV;
+    } else {
+        nLV = pc->ngayLamViec; // Giữ nguyên nếu không thay đổi
+    }
 
     cout << "Ca lam viec hien tai: " << pc->caLamViec << "\n";
     string cLV; 
@@ -341,15 +522,56 @@ void QuanLyPhanCong::suaPhanCong() {
     if (!Utils::getInputWithESC(gV, "Nhap gio vao moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!gV.empty()) pc->gioVao = gV;
+    if (!gV.empty()) {
+        pc->gioVao = gV;
+    }
+    else {
+        gV = pc->gioVao; // Giữ nguyên nếu không thay đổi
+    }
 
     cout << "Gio ra hien tai: " << pc->gioRa << "\n";
     string gR; 
     if (!Utils::getInputWithESC(gR, "Nhap gio ra moi (Enter de giu nguyen): ")) {
         return;
     }
-    if (!gR.empty()) pc->gioRa = gR;
+    if (!gR.empty()) {
+        pc->gioRa = gR;
+    }
+    else {
+        gR = pc->gioRa; // Giữ nguyên nếu không thay đổi
+    }
+
+    // ===== KIỂM TRA TRÙNG LỊCH (BỎ QUA PHÂN CÔNG HIỆN TẠI) =====
+    bool thayDoiLich = (idtx != idtxCu || idxe != idxeCu || 
+                        nLV != ngayCu || gV != gioVaoCu || gR != gioRaCu);
     
+    if (thayDoiLich) {
+        bool trungLichTaiXe = kiemTraTrungLichTaiXe(idtx, nLV, gV, gR, pc->IDPC);
+        bool trungLichXe = kiemTraTrungLichXe(idxe, nLV, gV, gR, pc->IDPC);
+        
+        if (trungLichTaiXe || trungLichXe) {
+            cout << "\nBan co muon tiep tuc cap nhat?  (Y/N): ";
+            char confirm;
+            cin >> confirm;
+            cin.ignore();
+            
+            if (confirm != 'Y' && confirm != 'y') {
+                // Khôi phục giá trị cũ
+                pc->IDTX = idtxCu;
+                pc->IDXe = idxeCu;
+                pc->ngayLamViec = ngayCu;
+                pc->gioVao = gioVaoCu;
+                pc->gioRa = gioRaCu;
+                
+                Utils::setColor(14);
+                cout << "Da huy cap nhat!\n";
+                Utils::setColor(7);
+                Utils::pause();
+                return;
+            }
+        }
+    }
+
     cout << "Loai phan cong hien tai: " << pc->loaiPhanCong << "\n";
     string loaiPC; 
     if (!Utils::getInputWithESC(loaiPC, "Nhap loai phan cong moi (Enter de giu nguyen): ")) {
